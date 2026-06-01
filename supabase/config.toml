@@ -1,0 +1,7 @@
+project_id = "jscargzwjnoohsxvkmsx"
+
+[functions.modash-profile]
+verify_jwt = false
+
+[functions.modash-checkout-lookup]
+verify_jwt = false
