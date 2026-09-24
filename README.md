@@ -44,3 +44,21 @@ Build command: `npm run build` · Output: `dist/`.
 
 The landing page is a single password gate. The demo password unlocks the dashboard
 for the session (stored in `sessionStorage`).
+
+## Post to Pay discounts
+
+Qualifying accounts receive 10% off at 2,500 followers, increasing linearly to
+100% off at 10,000 followers (capped at 100%). The formula is
+`10 + 90 * clamp((followers - 2500) / 7500, 0, 1)` percent.
+Accounts below 2,500 followers do not qualify. Engagement rate is not required;
+the maximum of five sponsored posts in 30 days remains in place.
+The demo applies the discount to the displayed order total including mock tax.
+
+To present the scale without an account lookup, open `/checkout`, select Post to
+Pay and a platform, then expand **Try a demo follower count**. Adjust the slider
+and select **Use demo profile** to carry that quote through checkout. This uses a
+simulated account with no sponsored posts.
+
+The remaining balance is shown as payable today. Posting within 72 hours of
+delivery retains the discount; missing the deadline would charge the saved amount.
+All payments and orders in this flow remain simulated.

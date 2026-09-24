@@ -1,4 +1,4 @@
-import { Users, TrendingUp, Calendar } from 'lucide-react';
+import { Users, Calendar } from 'lucide-react';
 import { BrandRequirements } from '@/types/vouch';
 
 interface RequirementsDisplayProps {
@@ -15,12 +15,6 @@ export function RequirementsDisplay({ requirements, compact = false }: Requireme
       value: `${requirements.min_followers.toLocaleString()}+`,
     },
     {
-      icon: TrendingUp,
-      label: 'Engagement',
-      shortLabel: 'Engagement',
-      value: `${requirements.min_engagement_rate}%+`,
-    },
-    {
       icon: Calendar,
       label: 'Max sponsored/30d',
       shortLabel: 'Sponsored posts',
@@ -30,7 +24,7 @@ export function RequirementsDisplay({ requirements, compact = false }: Requireme
 
   if (compact) {
     return (
-      <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
+      <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
         {items.map((item) => (
           <span key={item.label} className="flex items-center gap-1">
             <item.icon className="h-3 w-3" />
@@ -47,7 +41,7 @@ export function RequirementsDisplay({ requirements, compact = false }: Requireme
       <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide mb-2">
         Requirements
       </p>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 gap-2">
         {items.map((item) => (
           <div key={item.label} className="text-center">
             <item.icon className="h-3.5 w-3.5 mx-auto text-muted-foreground mb-0.5" />

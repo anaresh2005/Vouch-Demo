@@ -1,3 +1,5 @@
+import { DiscountSummary } from './DiscountSummary';
+import { PostToPayQuote } from '@/lib/postToPayDiscount';
 import { CheckCircle2, Package, Clock, Tag, Camera, CalendarPlus } from 'lucide-react';
 import { Instagram } from 'lucide-react';
 import { TikTokIcon } from '@/components/icons/TikTokIcon';
@@ -6,6 +8,7 @@ import { SocialPlatform, CheckoutBrand } from '@/types/vouch';
 import { toast } from 'sonner';
 
 interface ConfirmationStepProps {
+  quote: PostToPayQuote;
   orderId: string;
   platform: SocialPlatform;
   username: string;
@@ -14,6 +17,7 @@ interface ConfirmationStepProps {
 }
 
 export function ConfirmationStep({
+  quote,
   orderId,
   platform,
   username,
@@ -79,9 +83,11 @@ export function ConfirmationStep({
         </p>
       </div>
 
+      <div className="text-left"><DiscountSummary quote={quote} /></div>
+
       <div className="bg-muted/50 rounded-lg p-3 text-left space-y-2.5">
         <div>
-          <h4 className="text-sm font-semibold text-foreground">It's on the house.</h4>
+          <h4 className="text-sm font-semibold text-foreground">{quote.amountDue === 0 ? 'Your post covers your order.' : 'Your discount is applied.'}</h4>
           <p className="text-[10px] text-muted-foreground">Here's what happens next</p>
         </div>
         

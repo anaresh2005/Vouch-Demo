@@ -1,3 +1,5 @@
+import { DiscountSummary } from './DiscountSummary';
+import { PostToPayQuote } from '@/lib/postToPayDiscount';
 import { useState } from 'react';
 import { ArrowLeft, CreditCard, Mail, Phone, AlertCircle, Clock, Tag, Camera } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -10,7 +12,7 @@ import { cn } from '@/lib/utils';
 interface ContactPaymentFormProps {
   platform: SocialPlatform;
   brand: CheckoutBrand;
-  orderTotal: number;
+  quote: PostToPayQuote;
   onSubmit: (data: { email: string; phone: string; cardNumber: string; cardExpiry: string; cardCvc: string }) => void;
   onBack: () => void;
 }
@@ -18,7 +20,7 @@ interface ContactPaymentFormProps {
 export function ContactPaymentForm({
   platform,
   brand,
-  orderTotal,
+  quote,
   onSubmit,
   onBack,
 }: ContactPaymentFormProps) {
@@ -117,9 +119,11 @@ export function ContactPaymentForm({
           </div>
         </div>
         <p className="text-[10px] text-muted-foreground mt-1">
-          Post on time = FREE! Otherwise ${orderTotal.toFixed(2)} is charged.
+          Post within 72 hours of delivery to keep your {quote.discountPercent.toLocaleString('en-US', { maximumFractionDigits: 2 })}% discount.
         </p>
       </div>
+
+      <DiscountSummary quote={quote} />
 
       <form onSubmit={handleSubmit} className="space-y-3">
         <div className="space-y-1">
@@ -168,7 +172,7 @@ export function ContactPaymentForm({
           <Label htmlFor="cardNumber" className="flex items-center gap-1.5 text-xs">
             <CreditCard className="h-3.5 w-3.5" />
             Card Number
-            <span className="text-[10px] text-muted-foreground font-normal">(backup)</span>
+            <span className="text-[10px] text-muted-foreground font-normal">{quote.amountDue === 0 ? '(backup)' : '(payment & backup)'}</span>
           </Label>
           <Input
             id="cardNumber"

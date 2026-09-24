@@ -76,7 +76,7 @@ export function MobileCheckoutContent({ scrollContainerRef }: MobileCheckoutCont
             <span className="text-foreground">${(cartTotal * 0.08).toFixed(2)}</span>
           </div>
           <div className="flex justify-between font-semibold text-base pt-2 border-t border-border">
-            <span className="text-foreground">Total</span>
+            <span className="text-foreground">Total before discounts</span>
             <span className="text-foreground">${(cartTotal * 1.08).toFixed(2)}</span>
           </div>
         </div>

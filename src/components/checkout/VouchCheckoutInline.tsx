@@ -1,3 +1,4 @@
+import { calculatePostToPayQuote } from '@/lib/postToPayDiscount';
 import { useState, useRef, useEffect } from 'react';
 import { CheckoutProgressIndicator, CheckoutStep } from './CheckoutProgressIndicator';
 import { PlatformSelector } from './PlatformSelector';
@@ -8,7 +9,7 @@ import { ConfirmationStep } from './ConfirmationStep';
 import { PayWithPostButton } from './PayWithPostButton';
 import { SocialPlatform, CheckoutSession, CheckoutBrand } from '@/types/vouch';
 import { lookupUsername, lookupCollaborations } from '@/lib/checkoutMockData';
-import { checkFollowersAndEngagement, checkSponsoredPosts } from '@/lib/eligibilityCheck';
+import { checkFollowers, checkSponsoredPosts } from '@/lib/eligibilityCheck';
 import iconWhite from '@/assets/icon-white.png';
 
 interface VouchCheckoutInlineProps {
@@ -41,6 +42,22 @@ export function VouchCheckoutInline({
   const [isLoading, setIsLoading] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const quote = calculatePostToPayQuote(session.accountStats?.followers ?? 0, orderTotal, session.isEligible);
+
+  const handleDemoSelect = (followers: number) => {
+    const stats = {
+      followers, engagementRate: 0, sponsoredPosts30d: 0,
+      verified: false, profileImageUrl: null, displayName: 'Demo creator',
+    };
+    const phase1 = checkFollowers(stats, brand.requirements);
+    const phase2 = checkSponsoredPosts(stats.sponsoredPosts30d, brand.requirements);
+    setSession((prev) => ({
+      ...prev, username: 'demo_creator', accountStats: stats,
+      isEligible: phase1.eligible && phase2.eligible,
+      eligibilityReasons: [...phase1.reasons, ...phase2.reasons],
+    }));
+    setStep('verify');
+  };
 
   // Click outside to collapse and reset
   useEffect(() => {
@@ -91,8 +108,8 @@ export function VouchCheckoutInline({
       const stats = await lookupUsername(username, session.platform || 'instagram');
       
       if (stats) {
-        // Phase 1: Check followers and engagement first
-        const phase1 = checkFollowersAndEngagement(stats, brand.requirements);
+        // Phase 1: Check the follower minimum first
+        const phase1 = checkFollowers(stats, brand.requirements);
         
         if (phase1.needsSponsoredCheck) {
           const sponsoredPosts30d = await lookupCollaborations(username, session.platform || 'instagram');
@@ -196,6 +213,8 @@ export function VouchCheckoutInline({
 
       {step === 'username' && session.platform && (
         <UsernameInput
+          orderTotal={orderTotal}
+          onDemoSelect={handleDemoSelect}
           platform={session.platform}
           requirements={brand.requirements}
           onSubmit={handleUsernameSubmit}
@@ -206,6 +225,7 @@ export function VouchCheckoutInline({
 
       {step === 'verify' && session.platform && session.accountStats && (
         <EligibilityCheck
+          quote={quote}
           platform={session.platform}
           username={session.username}
           stats={session.accountStats}
@@ -219,6 +239,7 @@ export function VouchCheckoutInline({
 
       {step === 'verify' && !session.accountStats && (
         <EligibilityCheck
+          quote={quote}
           platform={session.platform!}
           username={session.username}
           stats={{
@@ -241,7 +262,7 @@ export function VouchCheckoutInline({
         <ContactPaymentForm
           platform={session.platform}
           brand={brand}
-          orderTotal={orderTotal}
+          quote={quote}
           onSubmit={handleContactPaymentSubmit}
           onBack={handleBackToVerify}
         />
@@ -249,6 +270,7 @@ export function VouchCheckoutInline({
 
       {step === 'confirm' && orderId && session.platform && (
         <ConfirmationStep
+          quote={quote}
           orderId={orderId}
           platform={session.platform}
           username={session.username}

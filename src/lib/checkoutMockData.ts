@@ -1,4 +1,5 @@
 import { CartItem, CheckoutBrand, AccountStats } from '@/types/vouch';
+import { POST_TO_PAY_MIN_FOLLOWERS } from './postToPayDiscount';
 import { supabase } from '@/integrations/supabase/client';
 import productShorts from '@/assets/product-shorts.png';
 import productSunglasses from '@/assets/product-sunglasses.png';
@@ -28,8 +29,7 @@ export const mockBrand: CheckoutBrand = {
   instagramUsername: 'styleco_official',
   tiktokUsername: 'styleco',
   requirements: {
-    min_followers: 5000,
-    min_engagement_rate: 2.5,
+    min_followers: POST_TO_PAY_MIN_FOLLOWERS,
     max_sponsored_posts_30d: 5,
   },
 };

@@ -1,10 +1,13 @@
-import { CheckCircle2, XCircle, ArrowLeft, Users, TrendingUp, BadgeCheck } from 'lucide-react';
+import { DiscountSummary } from './DiscountSummary';
+import { PostToPayQuote } from '@/lib/postToPayDiscount';
+import { CheckCircle2, XCircle, ArrowLeft, BadgeCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { AccountStats, SocialPlatform } from '@/types/vouch';
 import { cn } from '@/lib/utils';
 
 interface EligibilityCheckProps {
+  quote?: PostToPayQuote;
   platform: SocialPlatform;
   username: string;
   stats: AccountStats;
@@ -16,6 +19,7 @@ interface EligibilityCheckProps {
 }
 
 export function EligibilityCheck({
+  quote,
   platform,
   username,
   stats,
@@ -54,11 +58,13 @@ export function EligibilityCheck({
                 )}
               </div>
               <p className="text-xs text-muted-foreground">
-                {stats.followers.toLocaleString()} followers • {stats.engagementRate}% eng.
+                {stats.followers.toLocaleString()} followers
               </p>
             </div>
           </div>
         </div>
+
+        {quote && <DiscountSummary quote={quote} />}
 
         <div className="flex gap-2">
           <Button variant="outline" onClick={onTryDifferent} className="flex-1 h-9 text-sm">
@@ -102,7 +108,7 @@ export function EligibilityCheck({
               )}
             </div>
             <p className="text-[10px] text-muted-foreground">
-              {stats.followers.toLocaleString()} followers • {stats.engagementRate}%
+              {stats.followers.toLocaleString()} followers
             </p>
           </div>
         </div>
