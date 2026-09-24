@@ -122,7 +122,6 @@ export interface VouchPost {
 
 export interface BrandRequirements {
   min_followers: number;
-  max_sponsored_posts_30d: number;
 }
 
 // Checkout-related types

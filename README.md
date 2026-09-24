@@ -50,8 +50,8 @@ for the session (stored in `sessionStorage`).
 Qualifying accounts receive 10% off at 2,500 followers, increasing linearly to
 100% off at 10,000 followers (capped at 100%). The formula is
 `10 + 90 * clamp((followers - 2500) / 7500, 0, 1)` percent.
-Accounts below 2,500 followers do not qualify. Engagement rate is not required;
-the maximum of five sponsored posts in 30 days remains in place.
+Accounts below 2,500 followers do not qualify. Eligibility depends only on follower
+count; engagement rate and sponsored-post count are not requirements.
 The demo applies the discount to the displayed order total including mock tax.
 
 The remaining balance is shown as payable today. Posting within 72 hours of

@@ -8,8 +8,8 @@ import { ContactPaymentForm } from './ContactPaymentForm';
 import { ConfirmationStep } from './ConfirmationStep';
 import { PayWithPostButton } from './PayWithPostButton';
 import { SocialPlatform, CheckoutSession, CheckoutBrand } from '@/types/vouch';
-import { lookupUsername, lookupCollaborations } from '@/lib/checkoutMockData';
-import { checkFollowers, checkSponsoredPosts } from '@/lib/eligibilityCheck';
+import { lookupUsername } from '@/lib/checkoutMockData';
+import { checkEligibility } from '@/lib/eligibilityCheck';
 import iconWhite from '@/assets/icon-white.png';
 
 interface VouchCheckoutInlineProps {
@@ -93,27 +93,13 @@ export function VouchCheckoutInline({
       const stats = await lookupUsername(username, session.platform || 'instagram');
       
       if (stats) {
-        // Phase 1: Check the follower minimum first
-        const phase1 = checkFollowers(stats, brand.requirements);
-        
-        if (phase1.needsSponsoredCheck) {
-          const sponsoredPosts30d = await lookupCollaborations(username, session.platform || 'instagram');
-          const phase2 = checkSponsoredPosts(sponsoredPosts30d, brand.requirements);
-          setSession((prev) => ({
-            ...prev,
-            accountStats: { ...stats, sponsoredPosts30d },
-            isEligible: phase2.eligible,
-            eligibilityReasons: phase2.reasons,
-          }));
-        } else {
-          // Failed phase 1 — no need to check sponsored posts
-          setSession((prev) => ({
-            ...prev,
-            accountStats: stats,
-            isEligible: false,
-            eligibilityReasons: phase1.reasons,
-          }));
-        }
+        const eligibility = checkEligibility(stats, brand.requirements);
+        setSession((prev) => ({
+          ...prev,
+          accountStats: stats,
+          isEligible: eligibility.eligible,
+          eligibilityReasons: eligibility.reasons,
+        }));
       } else {
         setSession((prev) => ({
           ...prev,

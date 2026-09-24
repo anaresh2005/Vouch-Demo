@@ -30,13 +30,11 @@ export const mockBrand: CheckoutBrand = {
   tiktokUsername: 'styleco',
   requirements: {
     min_followers: POST_TO_PAY_MIN_FOLLOWERS,
-    max_sponsored_posts_30d: 5,
   },
 };
 
 // Session-level caches to avoid redundant Modash API calls
 const usernameCache: Record<string, AccountStats | null> = {};
-const collaborationsCache: Record<string, number> = {};
 
 // Instant local lookup for the 6 known demo influencer accounts — no API call needed
 // ERs derived from Raw API with Discovery API-aligned methodology:
@@ -138,42 +136,6 @@ export async function lookupUsername(username: string, platform: string = 'insta
     console.error('Failed to lookup username via Modash:', err);
     usernameCache[cacheKey] = null;
     return null;
-  }
-}
-
-export async function lookupCollaborations(username: string, platform: string = 'instagram'): Promise<number> {
-  const cleanUsername = username.toLowerCase().replace('@', '').trim();
-  
-  const cacheKey = `${platform}:${cleanUsername}`;
-
-  // Instant return for known demo accounts
-  if (DEMO_ACCOUNTS[cacheKey]) {
-    return DEMO_ACCOUNTS[cacheKey].sponsoredPosts30d;
-  }
-
-  if (cacheKey in collaborationsCache) {
-    console.log(`[Cache hit] lookupCollaborations ${cacheKey}`);
-    return collaborationsCache[cacheKey];
-  }
-
-  try {
-    const { data, error } = await supabase.functions.invoke('modash-collaborations', {
-      body: { platform, username: cleanUsername },
-    });
-
-    if (error) {
-      console.error('Collaborations edge function error:', error);
-      collaborationsCache[cacheKey] = 0;
-      return 0;
-    }
-
-    const result = data?.sponsoredPosts30d ?? 0;
-    collaborationsCache[cacheKey] = result;
-    return result;
-  } catch (err) {
-    console.error('Failed to lookup collaborations:', err);
-    collaborationsCache[cacheKey] = 0;
-    return 0;
   }
 }
 
