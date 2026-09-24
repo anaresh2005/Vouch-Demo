@@ -1,4 +1,3 @@
-import { DiscountDemo } from './DiscountDemo';
 import { useState } from 'react';
 import { Instagram, Loader2, ArrowLeft } from 'lucide-react';
 import { TikTokIcon } from '@/components/icons/TikTokIcon';
@@ -8,8 +7,6 @@ import { SocialPlatform, BrandRequirements } from '@/types/vouch';
 import { RequirementsDisplay } from './RequirementsDisplay';
 
 interface UsernameInputProps {
-  orderTotal: number;
-  onDemoSelect: (followers: number) => void;
   platform: SocialPlatform;
   requirements: BrandRequirements;
   onSubmit: (username: string) => void;
@@ -18,8 +15,6 @@ interface UsernameInputProps {
 }
 
 export function UsernameInput({
-  orderTotal,
-  onDemoSelect,
   platform,
   requirements,
   onSubmit,
@@ -93,7 +88,6 @@ export function UsernameInput({
           </Button>
         </div>
       </form>
-      <DiscountDemo orderTotal={orderTotal} disabled={isLoading} onSelect={onDemoSelect} />
     </div>
   );
 }

@@ -54,11 +54,6 @@ Accounts below 2,500 followers do not qualify. Engagement rate is not required;
 the maximum of five sponsored posts in 30 days remains in place.
 The demo applies the discount to the displayed order total including mock tax.
 
-To present the scale without an account lookup, open `/checkout`, select Post to
-Pay and a platform, then expand **Try a demo follower count**. Adjust the slider
-and select **Use demo profile** to carry that quote through checkout. This uses a
-simulated account with no sponsored posts.
-
 The remaining balance is shown as payable today. Posting within 72 hours of
 delivery retains the discount; missing the deadline would charge the saved amount.
 All payments and orders in this flow remain simulated.
