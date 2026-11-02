@@ -19,11 +19,11 @@ Roadmap features mocked in the demo:
 - **More platforms.** Snapchat, Substack, X and LinkedIn sit alongside Instagram and TikTok. They
   aren't scanned: the panel says so, accepts any username and gives 100% off.
 - **Cart and checkout placements.** The demo switches between the product, cart and checkout pages.
-  On the cart and checkout pages the offer covers the whole order. The checkout page shows mock
-  express options (Shop Pay, PayPal, G Pay), Post to Pay and a disabled card form.
+  On the cart and checkout pages the offer covers the whole order. At checkout, Post to Pay is one of
+  the express tiles (with mock Shop Pay, PayPal and G Pay), above a disabled card form.
 - **Ambassador codes.** Shoppers get a personal code (their followers get 10% off; they earn 10% of
-  each order). It's a compact, optional line on the "You qualify!" step, and offered again on the
-  order confirmation, just before they write their caption.
+  each order), and it's emailed to them. One compact, optional line ("Earn 10% commission", with an
+  info tip) appears identically on the "You qualify!" step and the order confirmation.
 
 The store's theme follows Post to Pay's default look: 6px corners and 16px semibold Inter on buttons.
 

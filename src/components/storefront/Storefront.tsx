@@ -185,12 +185,13 @@ function CheckoutPage() {
 
         <main className="px-4 py-6 md:px-8 md:py-10">
           <p className="text-center text-sm text-[#121212]/60">Express checkout</p>
-          <div className="mt-3 grid grid-cols-3 gap-2">
+          {/* Post to Pay is one of the express tiles, the same size as the others; its tagline and panel span the row. */}
+          <div className="mt-3 grid grid-cols-2 gap-2">
             <button type="button" className={cn(BUTTON, 'bg-[#5a31f4] text-white')}>Shop Pay</button>
             <button type="button" className={cn(BUTTON, 'bg-[#ffc439] text-[#003087]')}>PayPal</button>
             <button type="button" className={cn(BUTTON, 'bg-black text-white')}>G Pay</button>
+            <PostToPay placement="checkout" summary={`${CART.length} items in your order`} priceCents={subtotal} />
           </div>
-          <PostToPay placement="checkout" summary={`${CART.length} items in your order`} priceCents={subtotal} />
 
           <div className="my-6 flex items-center gap-3 text-xs uppercase text-[#121212]/50" aria-hidden="true">
             <span className="h-px flex-1 bg-[#e8e8e8]" />or<span className="h-px flex-1 bg-[#e8e8e8]" />

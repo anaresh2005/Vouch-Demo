@@ -19,21 +19,20 @@
 .vouch-proof__demo-note { margin-top: 16px !important; padding: 10px 12px; border-radius: 6px; background: #fdf8c9; box-shadow: 0 0 0 1px #f5df8f; color: #6b3a00; font-size: 13px; line-height: 18px; }
 .vouch-proof__demo-note strong { font-weight: 600; }
 
-/* Affiliate code (roadmap), on the order confirmation. Same edge, icon and type as the deal card and steps. */
-.vouch-proof__affiliate { display: flex; gap: 12px; margin-top: 12px; padding: 12px; border-radius: 8px; box-shadow: var(--vouch-edge); }
-.vouch-proof__affiliate .vouch-proof__step-icon { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 9999px; background: var(--vouch-accent-tint); color: var(--vouch-accent); }
-.vouch-proof__affiliate > div { flex: 1; min-width: 0; }
-.vouch-proof__affiliate strong { display: block; padding-top: 6px; color: var(--vouch-text); font-weight: 600; line-height: 24px; }
-.vouch-proof__affiliate p { margin-top: 2px !important; color: var(--vouch-muted); }
-.vouch-proof .vouch-proof__affiliate > div > button { height: 32px; margin-top: 10px; padding: 0 12px; border-radius: 6px; font-size: 14px; font-weight: 600; }
-.vouch-proof__code { display: flex; align-items: center; gap: 8px; margin-top: 6px; padding: 4px 4px 4px 12px; border-radius: 6px; background: var(--vouch-subtle); box-shadow: var(--vouch-edge); }
-.vouch-proof__code span { flex: 1; min-width: 0; overflow-wrap: anywhere; color: var(--vouch-text); font-size: 16px; font-weight: 600; letter-spacing: .04em; }
-.vouch-proof .vouch-proof__code button { height: 32px; padding: 0 12px; border-radius: 6px; font-size: 14px; font-weight: 600; }
-
-/* Ambassador code (roadmap) on the qualify step: one compact, optional line. */
-.vouch-proof__ambassador { display: flex; align-items: center; gap: 8px; margin-top: 8px !important; padding: 6px 6px 6px 12px; border-radius: 6px; box-shadow: var(--vouch-edge); color: var(--vouch-body); font-size: 13px; line-height: 18px; }
-.vouch-proof__ambassador svg { color: var(--vouch-accent); }
-.vouch-proof__ambassador span { flex: 1; min-width: 0; }
+/* Ambassador code (roadmap): one compact line, identical on the qualify step and the confirmation. */
+.vouch-proof__ambassador { position: relative; display: flex; align-items: center; gap: 6px; margin-top: 8px; padding: 6px 6px 6px 12px; border-radius: 6px; box-shadow: var(--vouch-edge); color: var(--vouch-body); font-size: 13px; line-height: 18px; }
+.vouch-proof__ambassador > svg { color: var(--vouch-accent); }
+.vouch-proof__ambassador > span { min-width: 0; overflow-wrap: anywhere; }
 .vouch-proof__ambassador strong { color: var(--vouch-text); font-weight: 600; }
-.vouch-proof .vouch-proof__ambassador button { flex-shrink: 0; height: 28px; padding: 0 10px; border-radius: 6px; background: var(--vouch-accent-tint); color: var(--vouch-accent); font-size: 13px; font-weight: 600; }
-.vouch-proof .vouch-proof__ambassador button:hover { background: color-mix(in srgb, var(--vouch-accent) 12%, #fff); }
+.vouch-proof .vouch-proof__ambassador > button { flex-shrink: 0; height: 28px; margin-left: auto; padding: 0 10px; border-radius: 6px; background: var(--vouch-accent-tint); color: var(--vouch-accent); font-size: 13px; font-weight: 600; }
+.vouch-proof .vouch-proof__ambassador > button:hover { background: color-mix(in srgb, var(--vouch-accent) 12%, #fff); }
+.vouch-proof__ambassador-tip { display: none; position: absolute; bottom: calc(100% + 6px); left: 0; right: 0; z-index: 1; padding: 12px; border-radius: 6px; background: #fff; box-shadow: var(--vouch-edge), 0 4px 12px rgb(26 44 68 / 12%); color: var(--vouch-body); }
+.vouch-proof__ambassador-tip strong { display: block; margin-bottom: 2px; }
+.vouch-proof__ambassador .vouch-proof__info[open] + .vouch-proof__ambassador-tip { display: block; }
+@media (hover: hover) { .vouch-proof__ambassador .vouch-proof__info:hover + .vouch-proof__ambassador-tip { display: block; } }
+
+/* Checkout (roadmap): Post to Pay sits in the express checkout grid as one tile. The host steps out of
+   the layout so its button is a grid cell, and its tagline and panel span the full row. */
+.vouch-proof--express { display: contents; }
+.vouch-proof--express > .vouch-proof__tagline, .vouch-proof--express > .vouch-proof__panel { grid-column: 1 / -1; }
+.vouch-proof--express > .vouch-proof__tagline { margin-top: 2px; }

@@ -13,7 +13,7 @@ export const ROADMAP: RoadmapPhase[] = [
     live: true,
     items: [
       {
-        title: 'Post to Pay on product pages',
+        title: 'Post to Pay',
         description: 'Instagram shoppers pay the discounted price today and keep the discount by posting. Vouch finds and reviews each post.',
         inDemo: true,
       },
@@ -30,7 +30,6 @@ export const ROADMAP: RoadmapPhase[] = [
     live: false,
     items: [
       { title: 'More platforms', description: 'TikTok, Snapchat, Substack, X and LinkedIn alongside Instagram.', inDemo: true },
-      { title: 'Cart and checkout pages', description: 'Post to Pay on the cart and checkout pages, covering the whole order.', inDemo: true },
       { title: 'Ambassador codes', description: 'Shoppers get their own code: their followers get a discount and they earn a share of each order.', inDemo: true },
     ],
   },

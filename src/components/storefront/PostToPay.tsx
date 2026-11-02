@@ -159,9 +159,28 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
   }[placement];
   const createCode = () => account && setCode(affiliateCode(account.username));
 
+  // Ambassador code (roadmap): one compact, optional line, identical on "You qualify!" and the order
+  // confirmation. The info tip explains the terms (shown on hover or tap, like the block's key terms).
+  const ambassador = (
+    <div className="vouch-proof__ambassador">
+      <PercentIcon size={16} />
+      <span>
+        {code ? <>Code <strong>{code}</strong> · emailed to you</> : <strong>Earn {AFFILIATE_PERCENT}% commission</strong>}
+      </span>
+      <details className="vouch-proof__info">
+        <summary aria-label="About ambassador codes" aria-controls={`vouch-ambassador-${step}`}><InfoIcon /></summary>
+      </details>
+      <div className="vouch-proof__ambassador-tip" id={`vouch-ambassador-${step}`} role="note">
+        <strong>Become a {demoStore.name} ambassador</strong>
+        Anyone who uses your code gets {AFFILIATE_PERCENT}% off, and you earn {AFFILIATE_PERCENT}% of the resulting sales. We’ll email you your code.
+      </div>
+      <button type="button" onClick={code ? copyCode : createCode}>{code ? (copied ? 'Copied' : 'Copy') : 'Get code'}</button>
+    </div>
+  );
+
   return (
     <div
-      className="vouch-proof"
+      className={placement === 'checkout' ? 'vouch-proof vouch-proof--express' : 'vouch-proof'}
       data-platform={platform}
       data-free-shipping={demoStore.freeExpressShipping ? '' : undefined}
       data-state={step === 'confirmation' ? 'confirmed' : undefined}
@@ -290,21 +309,7 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
                 <Deal quote={offer} />
                 <p className="vouch-proof__shipping vouch-proof__if-free-shipping"><TruckIcon />Includes free express shipping</p>
                 <p className="vouch-proof__condition">Post about it on {info.name} within <strong>{demoStore.postingWindowDays} days of delivery</strong> to keep your discount.</p>
-                {/* Ambassador code (roadmap): a small, optional offer here, and again after checkout. */}
-                <p className="vouch-proof__ambassador">
-                  <PercentIcon size={16} />
-                  {code ? (
-                    <>
-                      <span>Your ambassador code: <strong>{code}</strong></span>
-                      <button type="button" onClick={copyCode}>{copied ? 'Copied' : 'Copy'}</button>
-                    </>
-                  ) : (
-                    <>
-                      <span><strong>Become an ambassador.</strong> Earn {AFFILIATE_PERCENT}% of orders from your own code.</span>
-                      <button type="button" onClick={createCode}>Get code</button>
-                    </>
-                  )}
-                </p>
+                {ambassador}
                 <div className="vouch-proof__actions">
                   <button type="button" className="vouch-proof__secondary" onClick={() => go('username')}>← Back</button>
                   <button type="button" className="vouch-proof__primary" onClick={() => go('offer')}>Continue</button>
@@ -382,27 +387,7 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
                 <p className="vouch-proof__condition vouch-proof__if-pending-post">
                   Post within <strong>{demoStore.postingWindowDays} days of delivery</strong> and tag <strong className="vouch-proof__handle">{handle}</strong> to keep your {money(added.balanceCents)} discount. We’ll email you how and when to post.
                 </p>
-                {/* Ambassador code (roadmap): shown here if they got one on the qualify step, or offered again
-                    now, just before the shopper writes their caption. */}
-                <div className="vouch-proof__affiliate">
-                  <span className="vouch-proof__step-icon" aria-hidden="true"><PercentIcon /></span>
-                  {code ? (
-                    <div>
-                      <strong>Your ambassador code</strong>
-                      <div className="vouch-proof__code">
-                        <span>{code}</span>
-                        <button type="button" className="vouch-proof__secondary" onClick={copyCode}>{copied ? 'Copied' : 'Copy'}</button>
-                      </div>
-                      <p>Add it to your caption. Your followers get {AFFILIATE_PERCENT}% off with it, and you earn {AFFILIATE_PERCENT}% of every order they place.</p>
-                    </div>
-                  ) : (
-                    <div>
-                      <strong>Become an ambassador</strong>
-                      <p>Get your own code: your followers get {AFFILIATE_PERCENT}% off, and you earn {AFFILIATE_PERCENT}% of every order they place.</p>
-                      <button type="button" className="vouch-proof__secondary" onClick={createCode}>Create my code</button>
-                    </div>
-                  )}
-                </div>
+                {ambassador}
                 <details className="vouch-proof__terms"><summary>Your accepted agreement</summary><p>{terms}</p></details>
                 <div className="vouch-proof__actions">
                   <button type="button" className="vouch-proof__primary" onClick={reset}>Done</button>
