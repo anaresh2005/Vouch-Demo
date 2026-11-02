@@ -9,13 +9,32 @@ import iphoneFrame from '@/assets/iphone-frame.png';
 
 type ViewMode = 'desktop' | 'mobile';
 
-// What the demo leaves out, listed so investors know it exists.
-// TODO(Henry): add the roadmap features that won't be mocked in the demo.
+// What the demo leaves out, listed so investors know it exists (Henry, November 2, 2026).
 const NOT_SHOWN = [
+  {
+    title: 'Subscriptions',
+    description:
+      'Shoppers pay a monthly, quarterly or annual plan with a post. Before each renewal charge they can choose to post instead of paying.',
+  },
+  {
+    title: 'Content feed for brand websites',
+    description:
+      'A live page or section on the brand’s site that shows the latest and best-performing Vouch posts, and invites customers to join in.',
+  },
+  {
+    title: 'Influencer discovery',
+    description:
+      'A model trained on each brand’s own Vouch shoppers recommends creators beyond its natural traffic who match its best performers. Brands reach out to them from the dashboard.',
+  },
+  {
+    title: 'Influencer relationship management',
+    description:
+      'Regift top performers for sales and holidays. AI agents over text and email suggest content ideas, guide creators through posting, answer questions and hand out affiliate codes.',
+  },
   {
     title: 'Merchant dashboard',
     description:
-      'Where brands run Post to Pay: every order from checkout to post, each shopper’s creator profile, post review and flagging before the discount is final, and settings for discounts and where the button appears.',
+      'A timeline of every Vouch order. Brands open each order’s post and charges, track return on investment from Shopify sales, set who can Vouch, and see each creator’s audience and their creators’ audience overall.',
   },
 ];
 
@@ -56,8 +75,9 @@ export default function Demo() {
                 Not in this demo
                 <ChevronDown className="h-4 w-4" aria-hidden="true" />
               </PopoverTrigger>
-              <PopoverContent align="end" className="w-[340px] p-0">
-                <ul className="divide-y divide-divider">
+              <PopoverContent align="end" className="w-[min(380px,calc(100vw-32px))] p-0">
+                <p className="px-4 pb-2 pt-3 text-xs font-semibold text-muted-foreground">On the roadmap, not shown in this demo</p>
+                <ul className="max-h-[70vh] divide-y divide-divider overflow-y-auto">
                   {NOT_SHOWN.map((item) => (
                     <li key={item.title} className="px-4 py-3">
                       <p className="text-sm font-semibold text-foreground">{item.title}</p>

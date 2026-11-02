@@ -1,4 +1,4 @@
-import type { AccountStats, SocialPlatform } from '@/types/vouch';
+import type { AccountStats, ScannedPlatform } from '@/types/vouch';
 import { supabase } from '@/integrations/supabase/client';
 
 // The demo's one live feature: a real Instagram or TikTok profile scan through the demo
@@ -54,7 +54,7 @@ const DEMO_ACCOUNTS: Record<string, AccountStats> = {
 };
 
 /** Resolves the account's stats, throws AccountNotFoundError when the account doesn't exist, or another error when the scan fails. */
-export async function lookupUsername(username: string, platform: SocialPlatform): Promise<AccountStats> {
+export async function lookupUsername(username: string, platform: ScannedPlatform): Promise<AccountStats> {
   const cleanUsername = username.toLowerCase().replace('@', '').trim();
   const cacheKey = `${platform}:${cleanUsername}`;
   // Known demo accounts answer instantly, with no API call.

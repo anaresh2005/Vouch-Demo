@@ -1,7 +1,29 @@
-/* Demo additions on top of the live block's stylesheet (post-to-pay.css, kept verbatim).
-   TikTok is a demo-only platform: its card and account icon use TikTok's black on Vouch's subtle grey. */
-.vouch-proof { --vouch-tiktok: #000; --vouch-tiktok-tint: var(--vouch-subtle); }
-.vouch-proof__platforms { display: grid; gap: 8px; }
-.vouch-proof__tiktok { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px; background: var(--vouch-tiktok-tint); color: var(--vouch-tiktok); }
-.vouch-proof[data-platform="tiktok"] .vouch-proof__account-icon,
-.vouch-proof[data-platform="tiktok"] .vouch-proof__avatar { background: var(--vouch-tiktok-tint); color: var(--vouch-tiktok); }
+/* Demo additions on top of the live block's stylesheet (post-to-pay.css, kept verbatim). */
+
+/* Platforms beyond Instagram are demo-only. The block colours its platform tile, account icon and
+   avatar with --vouch-instagram(-tint); data-platform swaps in each platform's colour (on the host
+   for the chosen platform, and on each tile of the platform list). */
+.vouch-proof [data-platform="tiktok"], .vouch-proof[data-platform="tiktok"],
+.vouch-proof [data-platform="x"], .vouch-proof[data-platform="x"] { --vouch-instagram: #000; --vouch-instagram-tint: var(--vouch-subtle); }
+.vouch-proof [data-platform="snapchat"], .vouch-proof[data-platform="snapchat"] { --vouch-instagram: #000; --vouch-instagram-tint: #fffbc2; }
+.vouch-proof [data-platform="substack"], .vouch-proof[data-platform="substack"] { --vouch-instagram: #ff6719; --vouch-instagram-tint: #fff0e8; }
+.vouch-proof [data-platform="linkedin"], .vouch-proof[data-platform="linkedin"] { --vouch-instagram: #0a66c2; --vouch-instagram-tint: #e8f1fb; }
+
+/* Six platforms in two columns; the chevron is dropped for room. */
+.vouch-proof__platforms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.vouch-proof__platforms .vouch-proof__chevron { display: none; }
+
+/* Says plainly that an unscanned platform lets any username through. */
+.vouch-proof__demo-note { margin-top: 16px !important; padding: 10px 12px; border-radius: 6px; background: #fdf8c9; box-shadow: 0 0 0 1px #f5df8f; color: #6b3a00; font-size: 13px; line-height: 18px; }
+.vouch-proof__demo-note strong { font-weight: 600; }
+
+/* Affiliate code (roadmap), on the order confirmation. Same edge, icon and type as the deal card and steps. */
+.vouch-proof__affiliate { display: flex; gap: 12px; margin-top: 12px; padding: 12px; border-radius: 8px; box-shadow: var(--vouch-edge); }
+.vouch-proof__affiliate .vouch-proof__step-icon { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 9999px; background: var(--vouch-accent-tint); color: var(--vouch-accent); }
+.vouch-proof__affiliate > div { flex: 1; min-width: 0; }
+.vouch-proof__affiliate strong { display: block; padding-top: 6px; color: var(--vouch-text); font-weight: 600; line-height: 24px; }
+.vouch-proof__affiliate p { margin-top: 2px !important; color: var(--vouch-muted); }
+.vouch-proof .vouch-proof__affiliate > div > button { height: 32px; margin-top: 10px; padding: 0 12px; border-radius: 6px; font-size: 14px; font-weight: 600; }
+.vouch-proof__code { display: flex; align-items: center; gap: 8px; margin-top: 6px; padding: 4px 4px 4px 12px; border-radius: 6px; background: var(--vouch-subtle); box-shadow: var(--vouch-edge); }
+.vouch-proof__code span { flex: 1; min-width: 0; overflow-wrap: anywhere; color: var(--vouch-text); font-size: 16px; font-weight: 600; letter-spacing: .04em; }
+.vouch-proof .vouch-proof__code button { height: 32px; padding: 0 12px; border-radius: 6px; font-size: 14px; font-weight: 600; }

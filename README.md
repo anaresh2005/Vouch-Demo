@@ -12,6 +12,13 @@ menu describes it and lists roadmap features that aren't mocked.
 The only live call is the Instagram/TikTok account scan (Modash), made through a Supabase edge
 function (`modash-checkout-lookup`). Everything else, including checkout, is simulated.
 
+Roadmap features mocked in the demo:
+- **More platforms.** Snapchat, Substack, X and LinkedIn sit alongside Instagram and TikTok. They
+  aren't scanned: the panel says so, accepts any username and gives 100% off.
+- **Affiliate codes.** After the order is confirmed, the shopper can create a personal code (their
+  followers get 10% off; they earn 10% of each order). It's offered after checkout so it adds no
+  friction before payment and arrives just before they write their caption.
+
 > This is the demo site only. The production app lives in a separate repository.
 
 ## Tech stack
@@ -53,7 +60,7 @@ Old `/dashboard` links redirect to `/checkout`.
 
 ## Post to Pay discounts
 
-The demo is deliberately generous: every account gets at least 25% off. From 1,000 followers the
+The demo is deliberately generous: every scanned account gets at least 25% off. From 1,000 followers the
 discount rises linearly to 100% off at 2,500 followers, rounded to the nearest 5%
 (`src/lib/postToPayDiscount.ts`). The discount applies to the product price; tax isn't charged
 today, and missing the posting window would charge the discount plus tax.

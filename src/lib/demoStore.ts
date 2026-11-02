@@ -5,7 +5,8 @@ import bottleSage from '@/assets/bottle-sage.jpg';
 // A fictional merchant for the investor demo. Renders were generated for the demo (November 2026).
 export const demoStore = {
   name: 'Harbor & Pine',
-  handles: { instagram: 'harborandpine', tiktok: 'harborandpine' },
+  /** The brand's handle, the same on every platform. */
+  handle: 'harborandpine',
   /** Days after delivery to post, as in the merchant's Vouch settings. */
   postingWindowDays: 3,
   freeExpressShipping: true,

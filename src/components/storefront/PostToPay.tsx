@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import type { AccountStats, SocialPlatform } from '@/types/vouch';
+import type { AccountStats, ScannedPlatform, SocialPlatform } from '@/types/vouch';
 import { AccountNotFoundError, lookupUsername } from '@/lib/accountLookup';
-import { quote, type PostToPayQuote } from '@/lib/postToPayDiscount';
+import { DEMO_FULL_DISCOUNT_FOLLOWERS, quote, type PostToPayQuote } from '@/lib/postToPayDiscount';
 import { demoStore, money, type Variant } from '@/lib/demoStore';
 import terms from '@/content/post-to-pay-terms.txt?raw';
 import iconWhite from '@/assets/vouch-icon-white.png';
@@ -18,10 +18,20 @@ import './post-to-pay-demo.css';
 type Step = 'platform' | 'username' | 'approval' | 'offer' | 'added' | 'confirmation';
 const PROGRESS: Step[] = ['platform', 'username', 'approval', 'offer'];
 
-const PLATFORMS: Record<SocialPlatform, { name: string; format: string; content: string }> = {
-  instagram: { name: 'Instagram', format: 'Post or Reel', content: 'an Instagram post or Reel' },
-  tiktok: { name: 'TikTok', format: 'Video', content: 'a TikTok video' },
+// Every platform on the roadmap. Only Instagram and TikTok are scanned (through Modash); the others
+// accept any username at 100% off and say so (Henry, November 2, 2026).
+const PLATFORMS: Record<SocialPlatform, { name: string; format: string; content: string; scanned: boolean }> = {
+  instagram: { name: 'Instagram', format: 'Post or Reel', content: 'an Instagram post or Reel', scanned: true },
+  tiktok: { name: 'TikTok', format: 'Video', content: 'a TikTok video', scanned: true },
+  snapchat: { name: 'Snapchat', format: 'Story', content: 'a Snapchat Story', scanned: false },
+  substack: { name: 'Substack', format: 'Post or Note', content: 'a Substack post or Note', scanned: false },
+  x: { name: 'X', format: 'Post', content: 'a post on X', scanned: false },
+  linkedin: { name: 'LinkedIn', format: 'Post', content: 'a LinkedIn post', scanned: false },
 };
+
+// Demo affiliate program: the shopper's followers get 10% off with their code, and they earn 10% of each order.
+const AFFILIATE_PERCENT = 10;
+const affiliateCode = (username: string) => `${username.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10)}${AFFILIATE_PERCENT}`;
 
 const compact = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
 
@@ -33,7 +43,8 @@ interface Props {
 
 interface Account {
   username: string;
-  stats: AccountStats;
+  /** Null for platforms the demo doesn't scan. */
+  stats: AccountStats | null;
 }
 
 export function PostToPay({ productTitle, variant, priceCents }: Props) {
@@ -45,13 +56,17 @@ export function PostToPay({ productTitle, variant, priceCents }: Props) {
   const [error, setError] = useState('');
   const [account, setAccount] = useState<Account | null>(null);
   const [addedCount, setAddedCount] = useState(0);
+  const [code, setCode] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const heading = useRef<HTMLHeadingElement>(null);
   const input = useRef<HTMLInputElement>(null);
 
-  const offer: PostToPayQuote | null = account ? quote(account.stats.followers, priceCents) : null;
-  const added = offer && addedCount ? quote(account!.stats.followers, priceCents * addedCount) : null;
+  // Unscanned platforms get the full discount.
+  const followers = account ? (account.stats?.followers ?? DEMO_FULL_DISCOUNT_FOLLOWERS) : 0;
+  const offer: PostToPayQuote | null = account ? quote(followers, priceCents) : null;
+  const added = offer && addedCount ? quote(followers, priceCents * addedCount) : null;
   const info = PLATFORMS[platform];
-  const handle = `@${demoStore.handles[platform]}`;
+  const handle = `@${demoStore.handle}`;
 
   // Each step moves focus to its title (or the username field), as the live block does. Elements
   // can't take focus while their entrance animation still hides them, so wait for it to finish.
@@ -79,10 +94,15 @@ export function PostToPay({ productTitle, variant, priceCents }: Props) {
     event.preventDefault();
     if (busy) return;
     const name = username.replace(/^@/, '').trim();
+    if (!info.scanned) {
+      setAccount({ username: name.toLowerCase(), stats: null });
+      go('approval');
+      return;
+    }
     setBusy(true);
     setError('');
     try {
-      const stats = await lookupUsername(name, platform);
+      const stats = await lookupUsername(name, platform as ScannedPlatform);
       setAccount({ username: name.toLowerCase(), stats });
       go('approval');
     } catch (failure) {
@@ -106,7 +126,19 @@ export function PostToPay({ productTitle, variant, priceCents }: Props) {
     setAccount(null);
     setUsername('');
     setAddedCount(0);
+    setCode(null);
+    setCopied(false);
     setError('');
+  };
+
+  const copyCode = async () => {
+    if (!code) return;
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+    } catch {
+      // Clipboard access can be refused; the code stays on screen to copy by hand.
+    }
   };
 
   const qualified = !!offer && !addedCount;
@@ -200,9 +232,14 @@ export function PostToPay({ productTitle, variant, priceCents }: Props) {
                     <span>Public profile</span>
                     <span>Human account</span>
                   </div>
+                  {!info.scanned && (
+                    <p className="vouch-proof__demo-note" role="note">
+                      <strong>Demo only:</strong> {info.name} accounts aren’t scanned in this demo. Any username continues with 100% off.
+                    </p>
+                  )}
                   <div className="vouch-proof__actions">
                     <button type="button" className="vouch-proof__secondary" disabled={busy} onClick={() => go('platform')}>← Back</button>
-                    <button type="submit" className="vouch-proof__primary" data-check disabled={busy}>Check account</button>
+                    <button type="submit" className="vouch-proof__primary" data-check disabled={busy}>{info.scanned ? 'Check account' : 'Continue'}</button>
                   </div>
                   <p className="vouch-proof__sr-only" role="status">{busy ? `Checking your ${info.name} account…` : ''}</p>
                 </form>
@@ -214,7 +251,7 @@ export function PostToPay({ productTitle, variant, priceCents }: Props) {
                 <div className="vouch-proof__heading">
                   <span className="vouch-proof__avatar" aria-hidden="true">
                     <span>{account.username[0]}</span>
-                    {account.stats.profileImageUrl && (
+                    {account.stats?.profileImageUrl && (
                       <img src={account.stats.profileImageUrl} alt="" width={40} height={40} onError={(event) => event.currentTarget.removeAttribute('src')} />
                     )}
                   </span>
@@ -222,9 +259,15 @@ export function PostToPay({ productTitle, variant, priceCents }: Props) {
                     <h3 tabIndex={-1} ref={heading}>You qualify!</h3>
                     <p className="vouch-proof__stats">
                       <span data-profile-name>@{account.username}</span>
-                      <span title="Followers"><FollowersIcon /><span className="vouch-proof__sr-only">Followers: </span>{compact.format(account.stats.followers)}</span>
-                      {account.stats.engagementRate > 0 && (
-                        <span title="Engagement rate"><HeartIcon /><span className="vouch-proof__sr-only">Engagement rate: </span>{account.stats.engagementRate}%</span>
+                      {account.stats ? (
+                        <>
+                          <span title="Followers"><FollowersIcon /><span className="vouch-proof__sr-only">Followers: </span>{compact.format(account.stats.followers)}</span>
+                          {account.stats.engagementRate > 0 && (
+                            <span title="Engagement rate"><HeartIcon /><span className="vouch-proof__sr-only">Engagement rate: </span>{account.stats.engagementRate}%</span>
+                          )}
+                        </>
+                      ) : (
+                        <span>Not scanned in this demo</span>
                       )}
                     </p>
                   </div>
@@ -309,6 +352,27 @@ export function PostToPay({ productTitle, variant, priceCents }: Props) {
                 <p className="vouch-proof__condition vouch-proof__if-pending-post">
                   Post within <strong>{demoStore.postingWindowDays} days of delivery</strong> and tag <strong className="vouch-proof__handle">{handle}</strong> to keep your {money(added.balanceCents)} discount. We’ll email you how and when to post.
                 </p>
+                {/* Affiliate code (roadmap): offered once the order is placed, so it adds nothing to checkout
+                    and lands just before the shopper writes their caption. */}
+                <div className="vouch-proof__affiliate">
+                  <span className="vouch-proof__step-icon" aria-hidden="true"><PercentIcon /></span>
+                  {code ? (
+                    <div>
+                      <strong>Your code</strong>
+                      <div className="vouch-proof__code">
+                        <span>{code}</span>
+                        <button type="button" className="vouch-proof__secondary" onClick={copyCode}>{copied ? 'Copied' : 'Copy'}</button>
+                      </div>
+                      <p>Add it to your caption. Your followers get {AFFILIATE_PERCENT}% off with it, and you earn {AFFILIATE_PERCENT}% of every order they place.</p>
+                    </div>
+                  ) : (
+                    <div>
+                      <strong>Earn from your post</strong>
+                      <p>Get your own code: your followers get {AFFILIATE_PERCENT}% off, and you earn {AFFILIATE_PERCENT}% of every order they place.</p>
+                      <button type="button" className="vouch-proof__secondary" onClick={() => setCode(affiliateCode(account!.username))}>Create my code</button>
+                    </div>
+                  )}
+                </div>
                 <details className="vouch-proof__terms"><summary>Your accepted agreement</summary><p>{terms}</p></details>
                 <div className="vouch-proof__actions">
                   <button type="button" className="vouch-proof__primary" onClick={reset}>Done</button>
@@ -353,16 +417,17 @@ function Deal({ quote: deal, items }: { quote: PostToPayQuote; items?: number })
   );
 }
 
+// The block's Instagram tile; post-to-pay-demo.css recolours it per platform through data-platform.
 function PlatformIcon({ platform, account = false }: { platform: SocialPlatform; account?: boolean }) {
-  const className = account ? 'vouch-proof__account-icon' : `vouch-proof__${platform}`;
+  const Icon = PLATFORM_ICONS[platform];
   return (
-    <span className={className} aria-hidden="true">
-      {platform === 'instagram' ? <InstagramIcon /> : <TikTokIcon />}
+    <span className={account ? 'vouch-proof__account-icon' : 'vouch-proof__instagram'} data-platform={platform} aria-hidden="true">
+      <Icon />
     </span>
   );
 }
 
-// Icons copied from the block's inline SVGs (Lucide), plus TikTok's mark for the demo.
+// Icons copied from the block's inline SVGs (Lucide), plus the other platforms' marks for the demo.
 const Svg = ({ size, children, width = 2 }: { size: number; children: ReactNode; width?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={width} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{children}</svg>
 );
@@ -372,6 +437,22 @@ const TikTokIcon = () => (
     <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z" />
   </svg>
 );
+const Mark = ({ d }: { d: string }) => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={d} /></svg>
+);
+const XIcon = () => <Mark d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />;
+const LinkedInIcon = () => <Mark d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.125 2.062 2.062 0 0 1 0 4.125zM7.119 20.452H3.555V9h3.564v11.452z" />;
+const SubstackIcon = () => <Mark d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z" />;
+const SnapchatIcon = () => <Svg size={18} width={1.8}><path d="M12 3a5 5 0 0 0-5 5v2.5l-1.8.6a.6.6 0 0 0 0 1.1l1.6.7c-.5 1.6-1.7 3-3.3 3.6.4.8 1.5 1 2.4 1.2l.4 1.3c1-.2 2-.2 2.9.3.9.5 1.7 1.2 2.8 1.2s1.9-.7 2.8-1.2c.9-.5 1.9-.5 2.9-.3l.4-1.3c.9-.2 2-.4 2.4-1.2-1.6-.6-2.8-2-3.3-3.6l1.6-.7a.6.6 0 0 0 0-1.1l-1.8-.6V8a5 5 0 0 0-5-5Z" /></Svg>;
+const PLATFORM_ICONS: Record<SocialPlatform, () => JSX.Element> = {
+  instagram: InstagramIcon,
+  tiktok: TikTokIcon,
+  snapchat: SnapchatIcon,
+  substack: SubstackIcon,
+  x: XIcon,
+  linkedin: LinkedInIcon,
+};
+const PercentIcon = () => <Svg size={20}><line x1="19" x2="5" y1="5" y2="19" /><circle cx="6.5" cy="6.5" r="2.5" /><circle cx="17.5" cy="17.5" r="2.5" /></Svg>;
 const FollowersIcon = () => <Svg size={14}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></Svg>;
 const HeartIcon = () => <Svg size={14}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></Svg>;
 const TruckIcon = () => <Svg size={16}><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" /><path d="M15 18H9" /><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14" /><circle cx="17" cy="18" r="2" /><circle cx="7" cy="18" r="2" /></Svg>;
