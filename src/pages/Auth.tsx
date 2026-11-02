@@ -1,109 +1,56 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, type FormEvent } from 'react';
+import { Navigate } from 'react-router-dom';
 import { useDemoAuth } from '@/hooks/useDemoAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/hooks/use-toast';
-import { Loader2, Lock } from 'lucide-react';
-import iconRoyalPeriwinkle from '@/assets/icon-royal-periwinkle.png';
+import logo from '@/assets/vouch-logo-periwinkle.png';
 
+// The investor password gate, in the product's sign-in layout: logo top-left, one centered card.
 export default function Auth() {
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const { isDemoAuthenticated, demoLogin } = useDemoAuth();
-  const navigate = useNavigate();
-  const { toast } = useToast();
+  const [error, setError] = useState(false);
+  const { isDemoAuthenticated, loading, demoLogin } = useDemoAuth();
 
-  useEffect(() => {
-    if (isDemoAuthenticated) {
-      navigate('/dashboard');
-    }
-  }, [isDemoAuthenticated, navigate]);
+  if (!loading && isDemoAuthenticated) return <Navigate to="/checkout" replace />;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    const success = demoLogin(password);
-    if (!success) {
-      toast({
-        title: 'Access denied',
-        description: 'Incorrect investor password. Please try again.',
-        variant: 'destructive',
-      });
-    }
-    setIsLoading(false);
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    setError(!demoLogin(password));
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-primary/10 via-primary/5 via-60% to-background">
-      {/* Ambient background glow */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/[0.07] rounded-full blur-3xl" />
-      </div>
-
-      <Card className="w-full max-w-md bg-card/90 backdrop-blur-xl border-border/60 shadow-2xl animate-fade-in relative z-10">
-        <CardHeader className="text-center space-y-5 pt-8">
-          <Badge
-            variant="secondary"
-            className="mx-auto font-body text-xs tracking-wide px-3 py-1"
-          >
-            Investor Access
-          </Badge>
-
-          <div className="relative mx-auto w-16 h-16">
-            <div className="absolute inset-0 vouch-gradient rounded-2xl blur-lg opacity-30" />
-            <img
-              src={iconRoyalPeriwinkle}
-              alt="Vouch"
-              className="relative w-16 h-16 rounded-2xl shadow-lg"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <CardTitle className="text-[1.75rem] leading-tight font-display tracking-tight text-foreground">
-              Welcome to Vouch
-            </CardTitle>
-            <CardDescription className="font-body text-[0.95rem] text-muted-foreground max-w-xs mx-auto">
-              Attention is the new currency. Now accept it at checkout.
-            </CardDescription>
-          </div>
-        </CardHeader>
-
-        <CardContent className="pb-8 pt-2">
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="space-y-2">
-              <Label htmlFor="investor-password" className="font-body text-sm">
-                Investor Password
-              </Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+    <div className="flex min-h-screen flex-col bg-card">
+      <header className="mx-auto flex h-16 w-full max-w-[1080px] items-center px-4">
+        <img src={logo} alt="Vouch" className="h-6 w-auto" />
+      </header>
+      <main className="flex flex-1 items-start justify-center px-4 pb-16 pt-6 sm:pt-10">
+        <div className="w-full max-w-[440px] overflow-hidden rounded-xl bg-card shadow-edge">
+          <div className="px-6 pb-8 pt-8 sm:px-10">
+            <h1 className="mb-2 text-2xl font-semibold text-heading">View the Vouch demo</h1>
+            <p className="mb-6 text-sm text-body">Attention is the new currency. Now accept it at checkout.</p>
+            <form onSubmit={submit} className="space-y-5" noValidate>
+              <div className="space-y-2">
+                <Label htmlFor="investor-password">Investor password</Label>
                 <Input
                   id="investor-password"
                   type="password"
-                  placeholder="Enter investor password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
+                  onChange={(event) => setPassword(event.target.value)}
+                  aria-invalid={error}
+                  aria-describedby={error ? 'password-error' : undefined}
                   autoFocus
-                  className="h-11 pl-10 bg-background"
                 />
+                {error && <p id="password-error" role="alert" className="text-sm text-destructive">Incorrect password. Try again.</p>}
               </div>
-            </div>
-            <Button
-              type="submit"
-              className="w-full h-11 vouch-gradient text-primary-foreground font-display text-[0.95rem] shadow-md transition-all hover:opacity-95 hover:shadow-lg"
-              disabled={isLoading}
-            >
-              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Access Demo'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+              <Button type="submit" size="lg" className="w-full" disabled={!password}>Continue</Button>
+            </form>
+          </div>
+        </div>
+      </main>
+      <footer className="mx-auto flex w-full max-w-[1080px] justify-end px-4 pb-6 text-xs text-muted-foreground">
+        <span>© Vouch Commerce, Inc.</span>
+      </footer>
     </div>
   );
 }

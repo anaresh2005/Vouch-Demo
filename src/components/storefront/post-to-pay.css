@@ -1,0 +1,220 @@
+/* Matches the merchant dashboard: one periwinkle accent, blue-tinted greys, flat white surfaces
+   edged by 1px hairlines drawn with box-shadow (so state changes never shift the layout). Every
+   rule is scoped to .vouch-proof and resets the properties merchant themes commonly restyle. */
+.vouch-proof {
+  --vouch-accent: #4a54e2;
+  --vouch-accent-hover: #3a44cf;
+  --vouch-accent-pale: #b7bbf3;
+  --vouch-accent-tint: #f3f4fe;
+  --vouch-text: #1a2c44;
+  --vouch-body: #414552;
+  --vouch-muted: #667691;
+  --vouch-faint: #95a4ba;
+  --vouch-border: #d4dee9;
+  --vouch-divider: #ecf1f6;
+  --vouch-subtle: #f4f7fa;
+  --vouch-edge: 0 0 0 1px var(--vouch-border);
+  --vouch-ring: 0 0 0 4px rgb(74 84 226 / 25%);
+  --vouch-instagram: #c13584;
+  --vouch-instagram-tint: #fdedf5;
+  display: block; margin-block: 12px; width: 100%; color: var(--vouch-text);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px; line-height: 20px; letter-spacing: normal; text-align: left;
+  font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased;
+}
+.vouch-proof *, .vouch-proof *::before, .vouch-proof *::after { box-sizing: border-box; }
+.vouch-proof [hidden] { display: none !important; }
+.vouch-proof p { margin: 0; }
+.vouch-proof button, .vouch-proof input { font: inherit; letter-spacing: inherit; text-transform: none; }
+.vouch-proof button { cursor: pointer; margin: 0; border: 0; box-shadow: none; min-width: 0; min-height: 0; transition: background-color .15s, box-shadow .15s, color .15s; }
+.vouch-proof button:focus-visible, .vouch-proof summary:focus-visible { outline: none; box-shadow: var(--vouch-ring); }
+.vouch-proof button:disabled { cursor: default; }
+.vouch-proof img { display: block; object-fit: contain; flex-shrink: 0; }
+/* Themes often size every svg (e.g. width: 100%); pin each icon to the size in its markup. */
+.vouch-proof svg { display: inline-block; flex-shrink: 0; max-width: none; }
+.vouch-proof svg[width="14"] { width: 14px; height: 14px; }
+.vouch-proof svg[width="16"] { width: 16px; height: 16px; }
+.vouch-proof svg[width="18"] { width: 18px; height: 18px; }
+.vouch-proof svg[width="20"] { width: 20px; height: 20px; }
+
+/* Launch button: sits with the theme's Buy buttons, so it keeps their full width and height and
+   follows their corner radius. Dawn and the many themes built on it publish that radius as
+   --buttons-radius-outset / --buttons-radius; other themes fall back to 6px.
+   Display settings (set inline by the block from the vouch.button_style metafield) override the
+   corners (--vouch-button-radius), the label and icon colour (--vouch-button-text,
+   --vouch-icon-filter), and the accent; see the block's comment. */
+.vouch-proof .vouch-proof__button { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 48px; padding: 0 16px; border-radius: var(--vouch-button-radius, var(--buttons-radius-outset, var(--buttons-radius, 6px))); background: var(--vouch-accent); color: var(--vouch-button-text, #fff); font-size: 16px; font-weight: 600; line-height: 24px; }
+.vouch-proof .vouch-proof__button img { filter: var(--vouch-icon-filter, none); }
+.vouch-proof .vouch-proof__button:hover { background: var(--vouch-accent-hover); }
+.vouch-proof .vouch-proof__tagline { margin: 10px 0 0; color: var(--vouch-muted); font-size: 11px; line-height: 16px; text-align: center; }
+/* Button size from Display settings (Henry, October 8); mirrors BUTTON_SIZES in src/lib/storefrontButton.ts.
+   Standard is the rule above. The centered tagline scales with the button: 11px, 10.5px, 9px (Henry). */
+.vouch-proof--medium .vouch-proof__button { height: 40px; font-size: 15px; }
+.vouch-proof--compact .vouch-proof__button { width: 66%; min-width: 200px; height: 36px; margin-inline: auto; font-size: 14px; }
+.vouch-proof--medium .vouch-proof__button img { width: 18px; height: 18px; }
+.vouch-proof--compact .vouch-proof__button img { width: 16px; height: 16px; }
+.vouch-proof--medium .vouch-proof__tagline { font-size: 10.5px; }
+.vouch-proof--compact .vouch-proof__tagline { font-size: 9px; }
+.vouch-proof__tagline strong { color: var(--vouch-text); font-weight: 600; }
+/* Vouch paused the store or its month is full: the button is greyed out and translucent, with no
+   message (owner decision, October 12). Liquid renders it disabled, outside vouch-payment-proof. */
+.vouch-proof__launch:disabled { opacity: .45; filter: grayscale(1); cursor: not-allowed; }
+.vouch-proof__launch:disabled:hover { background: var(--vouch-accent); }
+/* The tagline belongs to the button: hidden with it while the panel is open. */
+.vouch-proof__button[hidden] + .vouch-proof__tagline { display: none; }
+
+/* Panel */
+.vouch-proof__panel { overflow: hidden; border-radius: 8px; background: #fff; box-shadow: var(--vouch-edge); animation: vouch-reveal .2s ease-out; }
+.vouch-proof__header { display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 8px 0 16px; box-shadow: inset 0 -1px 0 var(--vouch-divider); color: var(--vouch-text); font-weight: 600; }
+/* Same mark and corner rounding as the dashboard sidebar (6px on a 28px icon). */
+.vouch-proof__logo { width: 20px; height: 20px; border-radius: 22%; filter: var(--vouch-logo-filter, none); }
+.vouch-proof .vouch-proof__header button { display: grid; place-items: center; width: 32px; height: 32px; margin-left: auto; padding: 0; border-radius: 6px; background: none; color: var(--vouch-muted); font-size: 22px; line-height: 1; }
+.vouch-proof .vouch-proof__header button:hover { background: var(--vouch-subtle); color: var(--vouch-text); }
+.vouch-proof__body { padding: 20px; }
+
+/* Progress: a thin segmented bar instead of dots. Hidden once the order is placed. */
+.vouch-proof__progress { display: flex; gap: 4px; list-style: none; margin: 0 0 20px; padding: 0; }
+.vouch-proof__progress li { flex: 1; height: 4px; margin: 0; border-radius: 9999px; background: var(--vouch-divider); }
+.vouch-proof__progress li::marker { content: none; }
+.vouch-proof__progress li[data-complete], .vouch-proof__progress li[aria-current] { background: var(--vouch-accent); }
+.vouch-proof__body:has([data-step="confirmation"]:not([hidden]), [data-step="added"]:not([hidden])) .vouch-proof__progress { display: none; }
+
+/* Text */
+.vouch-proof .vouch-proof__body h3 { margin: 0; color: var(--vouch-text); font-family: inherit; font-size: 16px; font-weight: 600; line-height: 24px; letter-spacing: normal; text-transform: none; }
+.vouch-proof h3:focus { outline: none; }
+.vouch-proof__intro { margin-bottom: 12px !important; color: var(--vouch-text); font-weight: 600; font-size: 16px; line-height: 24px; }
+.vouch-proof__explanation { margin-top: 12px !important; color: var(--vouch-muted); font-size: 14px; line-height: 20px; }
+.vouch-proof__heading { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.vouch-proof__heading p { margin-top: 2px !important; color: var(--vouch-muted); font-size: 14px; }
+
+/* Platform choice: a selectable card */
+.vouch-proof .vouch-proof__platform { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; border-radius: 8px; background: #fff; box-shadow: var(--vouch-edge); color: var(--vouch-text); text-align: left; }
+.vouch-proof .vouch-proof__platform:hover { background: var(--vouch-accent-tint); box-shadow: 0 0 0 1px var(--vouch-accent); }
+.vouch-proof .vouch-proof__platform:focus-visible { box-shadow: 0 0 0 1px var(--vouch-accent), var(--vouch-ring); }
+.vouch-proof__platform strong, .vouch-proof__platform small { display: block; }
+.vouch-proof__platform strong { font-size: 14px; font-weight: 600; }
+.vouch-proof__platform small { color: var(--vouch-muted); font-size: 12px; line-height: 16px; }
+.vouch-proof__instagram, .vouch-proof__account-icon { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px; }
+.vouch-proof__instagram, .vouch-proof__account-icon { background: var(--vouch-instagram-tint); color: var(--vouch-instagram); }
+.vouch-proof__chevron { margin-left: auto; color: var(--vouch-faint); font-size: 22px; line-height: 1; }
+
+/* Username field */
+.vouch-proof__input-wrap { position: relative; }
+.vouch-proof__input-wrap > span { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--vouch-muted); font-size: 16px; pointer-events: none; }
+.vouch-proof input[type="text"] { display: block; width: 100%; height: 44px; margin: 0; padding: 0 12px 0 32px; border: 0; border-radius: 6px; outline: none; background: #fff; box-shadow: var(--vouch-edge); color: var(--vouch-text); font-size: 16px; transition: box-shadow .24s; }
+.vouch-proof input[type="text"]::placeholder { color: var(--vouch-faint); opacity: 1; }
+.vouch-proof input[type="text"]:focus { box-shadow: 0 0 0 1px var(--vouch-accent), var(--vouch-ring); }
+.vouch-proof input[type="text"]:disabled { background: var(--vouch-subtle); color: var(--vouch-muted); }
+.vouch-proof__requirements-label { margin-top: 16px !important; color: var(--vouch-body); font-size: 12px; font-weight: 600; line-height: 16px; }
+.vouch-proof__requirements { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.vouch-proof__requirements span { display: inline-flex; align-items: center; gap: 4px; min-height: 24px; padding: 2px 8px; border-radius: 4px; background: var(--vouch-subtle); box-shadow: var(--vouch-edge); color: var(--vouch-body); font-size: 12px; line-height: 16px; }
+
+/* Buttons */
+.vouch-proof__actions { display: flex; gap: 8px; margin-top: 20px; }
+.vouch-proof .vouch-proof__actions button { flex: 1; height: 40px; padding: 0 12px; border-radius: 6px; font-size: 14px; font-weight: 600; line-height: 20px; }
+.vouch-proof .vouch-proof__primary { background: var(--vouch-accent); color: var(--vouch-button-text, #fff); }
+.vouch-proof .vouch-proof__primary:hover { background: var(--vouch-accent-hover); }
+.vouch-proof .vouch-proof__primary:disabled { background: var(--vouch-accent-pale); }
+/* The Check account button is only disabled while the lookup runs, so it doubles as the spinner. */
+.vouch-proof .vouch-proof__primary[data-check] { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.vouch-proof .vouch-proof__primary[data-check]:disabled::before { content: ""; flex: 0 0 14px; width: 14px; height: 14px; border: 2px solid rgb(255 255 255 / 45%); border-top-color: #fff; border-radius: 9999px; animation: vouch-spin .7s linear infinite; }
+.vouch-proof .vouch-proof__secondary { background: #fff; box-shadow: var(--vouch-edge); color: var(--vouch-text); }
+.vouch-proof .vouch-proof__secondary:hover { background: var(--vouch-subtle); }
+.vouch-proof .vouch-proof__secondary:focus-visible { box-shadow: var(--vouch-edge), var(--vouch-ring); }
+.vouch-proof .vouch-proof__secondary:disabled { color: var(--vouch-faint); background: #fff; }
+.vouch-proof .vouch-proof__platform:disabled { color: var(--vouch-faint); background: #fff; box-shadow: var(--vouch-edge); }
+
+/* Qualification result and offer (step 6) */
+.vouch-proof__avatar { position: relative; display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; overflow: hidden; border-radius: 9999px; background: var(--vouch-instagram-tint); color: var(--vouch-instagram); font-size: 16px; font-weight: 600; text-transform: uppercase; }
+/* The picture covers the initial; with no picture, or a broken one, the initial shows. */
+.vouch-proof__avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.vouch-proof__avatar img[src=""], .vouch-proof__avatar img:not([src]) { display: none; }
+.vouch-proof__stats { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 12px; }
+.vouch-proof__stats > span { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.vouch-proof__stats svg { color: var(--vouch-faint); }
+.vouch-proof__heading span[data-profile-name] { color: var(--vouch-body); font-weight: 500; white-space: normal; overflow-wrap: anywhere; }
+.vouch-proof__deal { margin: 0; padding: 4px 16px; border-radius: 8px; box-shadow: var(--vouch-edge); }
+.vouch-proof__deal > div { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 40px; padding: 8px 0; }
+.vouch-proof__deal > div + div { box-shadow: inset 0 1px 0 var(--vouch-divider); }
+.vouch-proof__deal dt { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; color: var(--vouch-body); white-space: nowrap; }
+.vouch-proof__deal dd { margin: 0; color: var(--vouch-text); font-weight: 600; white-space: nowrap; }
+.vouch-proof__deal s { color: var(--vouch-muted); font-weight: 400; }
+.vouch-proof__discount dd { color: #217005; }
+.vouch-proof__badge { display: inline-flex; align-items: center; height: 20px; padding: 0 6px; border-radius: 4px; background: #eafcdd; box-shadow: 0 0 0 1px #a8f170; color: #217005; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.vouch-proof__total dt { color: var(--vouch-text); font-weight: 600; }
+.vouch-proof__total dd { font-size: 20px; line-height: 28px; }
+.vouch-proof__shipping { display: flex; align-items: center; gap: 8px; margin-top: 12px !important; color: #217005; font-weight: 500; }
+.vouch-proof__shipping svg { flex-shrink: 0; }
+.vouch-proof__condition { margin-top: 12px !important; padding: 10px 12px; border-radius: 6px; background: var(--vouch-accent-tint); color: var(--vouch-text); }
+.vouch-proof__condition strong { font-weight: 600; }
+
+/* How it works (step 7): an icon per point, with the amount in each title. The list stays an <ol>,
+   so screen readers still announce the order. */
+.vouch-proof__steps { list-style: none; margin: 16px 0 0; padding: 0; }
+.vouch-proof__steps li { position: relative; min-height: 36px; margin: 0; padding: 0 0 16px 48px; }
+.vouch-proof__steps li::marker { content: none; }
+.vouch-proof__steps .vouch-proof__step-icon { position: absolute; margin: 0; left: 0; top: 0; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 9999px; background: var(--vouch-accent-tint); color: var(--vouch-accent); }
+.vouch-proof__steps li > strong, .vouch-proof__steps li > span:not(.vouch-proof__step-icon) { display: block; }
+.vouch-proof__steps li > strong { padding-top: 6px; color: var(--vouch-text); font-weight: 600; line-height: 24px; }
+.vouch-proof__steps .vouch-proof__handle { color: var(--vouch-accent); font-weight: 600; }
+/* Shipping wording follows the offer: the host gets data-free-shipping when it is included. */
+.vouch-proof:not([data-free-shipping]) .vouch-proof__if-free-shipping, .vouch-proof[data-free-shipping] .vouch-proof__if-paid-shipping { display: none !important; }
+.vouch-proof__steps li > span { margin-top: 2px; color: var(--vouch-muted); }
+.vouch-proof__terms { margin-top: 16px; font-size: 14px; }
+.vouch-proof__consent + .vouch-proof__terms { margin: 4px 0 0 26px; }
+.vouch-proof__terms summary { display: inline-block; cursor: pointer; border-radius: 4px; color: var(--vouch-accent); font-weight: 500; list-style: none; }
+.vouch-proof__terms summary::-webkit-details-marker { display: none; }
+.vouch-proof__terms summary::after { content: " ›"; }
+.vouch-proof__terms[open] summary::after { content: " ⌄"; }
+.vouch-proof__terms summary:hover { color: var(--vouch-accent-hover); }
+.vouch-proof__terms p { max-height: 240px; overflow-y: auto; white-space: pre-line; margin-top: 8px !important; padding: 12px; border-radius: 6px; background: var(--vouch-subtle); color: var(--vouch-body); font-size: 12px; line-height: 18px; }
+.vouch-proof__consent { display: flex; align-items: flex-start; gap: 10px; margin-top: 16px; color: var(--vouch-body); font-size: 14px; line-height: 20px; cursor: pointer; }
+.vouch-proof__required { color: #c0123c; font-weight: 600; }
+.vouch-proof .vouch-proof__consent input { position: static; display: inline-block; flex: 0 0 16px; width: 16px; height: 16px; margin: 2px 0 0; padding: 0; opacity: 1; -webkit-appearance: checkbox; appearance: auto; accent-color: var(--vouch-accent); }
+
+/* Order status (step 9). The host's data-state, data-order and data-hold attributes pick what shows. */
+.vouch-proof__status-icon { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; border-radius: 9999px; background: var(--vouch-subtle); color: var(--vouch-muted); font-size: 18px; font-weight: 600; }
+.vouch-proof__status-icon::before { content: ""; width: 16px; height: 16px; border: 2px solid var(--vouch-border); border-top-color: var(--vouch-accent); border-radius: 9999px; animation: vouch-spin .9s linear infinite; }
+.vouch-proof:is([data-state="confirmed"], [data-state="waived"], [data-state="collected"]) .vouch-proof__status-icon, .vouch-proof [data-step="added"] .vouch-proof__status-icon { background: #eafcdd; color: #217005; box-shadow: 0 0 0 1px #a8f170; }
+.vouch-proof:is([data-state="confirmed"], [data-state="waived"], [data-state="collected"]) .vouch-proof__status-icon::before, .vouch-proof [data-step="added"] .vouch-proof__status-icon::before { content: "✓"; width: auto; height: auto; border: 0; animation: none; }
+.vouch-proof[data-state="review_required"] .vouch-proof__status-icon { background: #fdf8c9; color: #b13600; }
+.vouch-proof[data-state="review_required"] .vouch-proof__status-icon::before { content: "!"; width: auto; height: auto; border: 0; animation: none; }
+.vouch-proof [data-step="confirmation"] .vouch-proof__deal { margin-bottom: 0; }
+.vouch-proof:not([data-order]) .vouch-proof__if-order, .vouch-proof:not([data-hold]) .vouch-proof__if-hold,
+.vouch-proof:is([data-state="waived"], [data-state="collected"]) .vouch-proof__if-pending-post { display: none; }
+
+/* Notices */
+.vouch-proof__error { margin-top: 16px !important; padding: 8px 12px; border-radius: 6px; background: #fef4f6; box-shadow: 0 0 0 1px #fbd3dc; color: #c0123c; font-size: 14px; line-height: 20px; }
+/* Try again / Start over, only after a failed payment check (the host's data-recover). */
+.vouch-proof:not([data-recover]) .vouch-proof__if-recover { display: none; }
+/* Key terms (Henry, October 8): shown while the info icon is hovered or tapped open, until the agreement step's full terms. */
+.vouch-proof__footnote { position: relative; display: flex; align-items: center; gap: 4px; margin-top: 16px; color: var(--vouch-muted); font-size: 12px; line-height: 16px; }
+.vouch-proof__body:has(> [data-step="offer"]:not([hidden]), > [data-step="confirmation"]:not([hidden]), > [data-step="added"]:not([hidden])) .vouch-proof__footnote { display: none; }
+.vouch-proof__info summary { display: flex; padding: 2px; border-radius: 9999px; color: var(--vouch-muted); cursor: pointer; list-style: none; }
+.vouch-proof__info summary::-webkit-details-marker { display: none; }
+.vouch-proof__key-terms { display: none; position: absolute; bottom: calc(100% + 6px); left: 0; right: 0; z-index: 1; padding: 12px; border-radius: 6px; background: #fff; box-shadow: var(--vouch-edge), 0 4px 12px rgb(26 44 68 / 12%); color: var(--vouch-body); }
+.vouch-proof__info[open] + .vouch-proof__key-terms { display: block; }
+@media (hover: hover) { .vouch-proof__info:hover + .vouch-proof__key-terms { display: block; } }
+.vouch-proof__key-terms strong { color: var(--vouch-text); font-weight: 600; }
+.vouch-proof__key-terms ol { margin: 4px 0 0; padding-left: 18px; list-style: decimal; }
+.vouch-proof__sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px !important; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* Entrances. Each screen's parts fade up in order when it appears (showing a step restarts its
+   animations). "How it works" is deliberately slow, a second per point, so each one gets read; its
+   consent and Pay now arrive after the third point. Until shown, an item is hidden from clicks and
+   keyboard focus. Reduced-motion users get everything at once (see the media query below). */
+.vouch-proof [data-step]:not([hidden]) > * { animation: vouch-step-in .3s ease-out both; }
+.vouch-proof :is([data-step="approval"], [data-step="confirmation"], [data-step="added"]) > :nth-child(2) { animation-delay: .1s; }
+.vouch-proof :is([data-step="approval"], [data-step="confirmation"], [data-step="added"]) > :nth-child(3) { animation-delay: .2s; }
+.vouch-proof :is([data-step="approval"], [data-step="confirmation"], [data-step="added"]) > :nth-child(4) { animation-delay: .3s; }
+.vouch-proof :is([data-step="approval"], [data-step="confirmation"], [data-step="added"]) > :nth-child(n+5) { animation-delay: .4s; }
+.vouch-proof [data-step="offer"]:not([hidden]) .vouch-proof__steps li { animation: vouch-step-in .5s ease-out both; }
+.vouch-proof [data-step="offer"] .vouch-proof__steps li:nth-child(1) { animation-delay: .2s; }
+.vouch-proof [data-step="offer"] .vouch-proof__steps li:nth-child(2) { animation-delay: 1.2s; }
+.vouch-proof [data-step="offer"] .vouch-proof__steps li:nth-child(3) { animation-delay: 2.2s; }
+.vouch-proof [data-step="offer"]:not([hidden]) > :is(form, [data-payment-notice]) { animation-duration: .5s; animation-delay: 2.6s; }
+@keyframes vouch-step-in { from { opacity: 0; transform: translateY(6px); visibility: hidden; } to { opacity: 1; transform: none; visibility: visible; } }
+@keyframes vouch-spin { to { transform: rotate(360deg); } }
+@keyframes vouch-reveal { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 360px) { .vouch-proof__body { padding: 16px; } }
+@media (prefers-reduced-motion: reduce) { .vouch-proof *, .vouch-proof *::before, .vouch-proof *::after { animation: none !important; transition: none !important; } }

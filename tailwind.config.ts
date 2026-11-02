@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
@@ -31,6 +32,7 @@ export default {
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
+          hover: "hsl(var(--primary-hover))",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
@@ -67,25 +69,63 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        heading: "hsl(var(--heading))",
+        body: "hsl(var(--text-body))",
+        subdued: "hsl(var(--text-secondary))",
+        faint: "hsl(var(--text-faint))",
+        divider: "hsl(var(--divider))",
+        skeleton: "hsl(var(--skeleton))",
+        banner: "hsl(var(--banner))",
         success: {
           DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",
+          bg: "hsl(var(--success-bg))",
+          border: "hsl(var(--success-border))",
         },
         warning: {
           DEFAULT: "hsl(var(--warning))",
           foreground: "hsl(var(--warning-foreground))",
+          bg: "hsl(var(--warning-bg))",
+          border: "hsl(var(--warning-border))",
         },
-        vouch: {
-          periwinkle: "hsl(var(--vouch-primary))",
-          bone: "hsl(var(--vouch-bone))",
+        attention: {
+          DEFAULT: "hsl(var(--attention))",
+          bg: "hsl(var(--attention-bg))",
+          border: "hsl(var(--attention-border))",
+        },
+        danger: {
+          DEFAULT: "hsl(var(--destructive))",
+          bg: "hsl(var(--danger-bg))",
+          border: "hsl(var(--danger-border))",
+        },
+        info: {
+          DEFAULT: "hsl(var(--info))",
+          bg: "hsl(var(--info-bg))",
+          border: "hsl(var(--info-border))",
+        },
+        neutral: {
+          DEFAULT: "hsl(var(--neutral))",
+          bg: "hsl(var(--neutral-bg))",
+          border: "hsl(var(--neutral-border))",
         },
       },
+      fontSize: {
+        // Page titles (28/36 bold); everything else uses Tailwind's 12/14/16/20 steps.
+        title: ["1.75rem", { lineHeight: "2.25rem", fontWeight: "700" }],
+      },
       borderRadius: {
-        lg: "0.5rem",
-        md: "0.375rem",
-        sm: "0.25rem",
-        xl: "0.625rem",
+        sm: "0.25rem",   // badges, small elements
+        md: "0.375rem",  // the default: buttons, inputs, nav items
+        lg: "0.5rem",    // cards, popovers, search
+        xl: "0.75rem",   // large panels (rare)
         "2xl": "0.75rem",
+      },
+      boxShadow: {
+        // Flat at rest: a 1px hairline drawn as a shadow so states never shift layout.
+        edge: "0 0 0 1px hsl(var(--border))",
+        "edge-strong": "0 0 0 1px hsl(var(--text-secondary))",
+        // Only things that float (menus, popovers, dialogs) get elevation.
+        float: "0 5px 15px rgba(0,0,0,0.12), 0 15px 35px rgba(48,49,61,0.08)",
       },
       keyframes: {
         "accordion-down": {
@@ -97,7 +137,7 @@ export default {
           to: { height: "0" },
         },
         "fade-in": {
-          from: { opacity: "0", transform: "translateY(10px)" },
+          from: { opacity: "0", transform: "translateY(4px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
         "stagger-fade-in": {
@@ -116,7 +156,7 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both",
+        "fade-in": "fade-in 0.2s ease-out both",
         "stagger-fade-in": "stagger-fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both",
         "slide-in": "slide-in 0.3s ease-out",
         pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
@@ -126,5 +166,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [animate],
 } satisfies Config;
