@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import type { AccountStats, ScannedPlatform, SocialPlatform } from '@/types/vouch';
-import { AccountNotFoundError, lookupUsername } from '@/lib/accountLookup';
+import { AccountNotFoundError, DailyLimitError, lookupUsername } from '@/lib/accountLookup';
 import { DEMO_FULL_DISCOUNT_FOLLOWERS, quote, type PostToPayQuote } from '@/lib/postToPayDiscount';
-import { demoStore, money, type Variant } from '@/lib/demoStore';
+import { demoStore, money } from '@/lib/demoStore';
 import terms from '@/content/post-to-pay-terms.txt?raw';
 import iconWhite from '@/assets/vouch-icon-white.png';
 import iconPeriwinkle from '@/assets/vouch-icon-periwinkle.png';
@@ -12,8 +12,8 @@ import './post-to-pay-demo.css';
 // A React port of the live storefront block (Vouch-MVP-Production:
 // extensions/vouch-post-to-pay/blocks/post-to-pay.liquid and assets/post-to-pay.css, copied
 // verbatim). Markup, class names and wording follow the block so the shared stylesheet applies
-// unchanged. Demo differences: TikTok is offered alongside Instagram, the discount follows the demo
-// curve, and the account scan is the only live call. Checkout is simulated.
+// unchanged. Demo differences (roadmap mocks): more platforms, a cart-page placement, affiliate codes;
+// the discount follows the demo curve, and the account scan is the only live call. Checkout is simulated.
 
 type Step = 'platform' | 'username' | 'approval' | 'offer' | 'added' | 'confirmation';
 const PROGRESS: Step[] = ['platform', 'username', 'approval', 'offer'];
@@ -36,8 +36,10 @@ const affiliateCode = (username: string) => `${username.toUpperCase().replace(/[
 const compact = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
 
 interface Props {
-  productTitle: string;
-  variant: Variant;
+  /** Product page: the item is added to the cart. Cart page (roadmap): the offer covers the whole cart and checks out. */
+  placement: 'product' | 'cart';
+  /** What the offer covers, e.g. "Everyday Bottle · Slate · Quantity 1". */
+  summary: string;
   priceCents: number;
 }
 
@@ -47,7 +49,8 @@ interface Account {
   stats: AccountStats | null;
 }
 
-export function PostToPay({ productTitle, variant, priceCents }: Props) {
+export function PostToPay({ placement, summary, priceCents }: Props) {
+  const cart = placement === 'cart';
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>('platform');
   const [platform, setPlatform] = useState<SocialPlatform>('instagram');
@@ -108,16 +111,25 @@ export function PostToPay({ productTitle, variant, priceCents }: Props) {
     } catch (failure) {
       setError(failure instanceof AccountNotFoundError
         ? `We couldn’t find @${name} on ${info.name}. Check the username and try again.`
-        : 'Vouch is unavailable. Try again.');
+        : failure instanceof DailyLimitError
+          ? 'Today’s demo account scans are used up. Try again tomorrow.'
+          : 'Vouch is unavailable. Try again.');
     } finally {
       setBusy(false);
     }
   };
 
-  const accept = (event: FormEvent) => {
+  const accept = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setAddedCount((count) => count + 1);
-    go('added');
+    const optIn = event.currentTarget.elements.namedItem('affiliate') as HTMLInputElement;
+    if (optIn.checked && account) setCode(affiliateCode(account.username));
+    if (cart) {
+      setAddedCount(1);
+      go('confirmation');
+    } else {
+      setAddedCount((count) => count + 1);
+      go('added');
+    }
   };
 
   const reset = () => {
@@ -142,7 +154,7 @@ export function PostToPay({ productTitle, variant, priceCents }: Props) {
   };
 
   const qualified = !!offer && !addedCount;
-  const launchLabel = qualified ? 'Add to cart with Post to Pay' : 'Post to Pay';
+  const launchLabel = !qualified ? 'Post to Pay' : cart ? 'Check out with Post to Pay' : 'Add to cart with Post to Pay';
 
   return (
     <div
@@ -285,7 +297,7 @@ export function PostToPay({ productTitle, variant, priceCents }: Props) {
             {step === 'offer' && offer && (
               <div data-step="offer">
                 <h3 tabIndex={-1} ref={heading}>How it works</h3>
-                <p className="vouch-proof__explanation">{productTitle} · {variant.name} · Quantity 1. This agreement covers every item you add with Post to Pay.</p>
+                <p className="vouch-proof__explanation">{summary}. {cart ? 'This agreement covers your whole cart.' : 'This agreement covers every item you add with Post to Pay.'}</p>
                 <ol className="vouch-proof__steps">
                   <li>
                     <span className="vouch-proof__step-icon" aria-hidden="true"><CardIcon /></span>
@@ -316,9 +328,14 @@ export function PostToPay({ productTitle, variant, priceCents }: Props) {
                     <input type="checkbox" name="contentRights" defaultChecked />
                     <span>I grant {demoStore.name} the rights to publish and promote the content I create for this order.</span>
                   </label>
+                  {/* Affiliate code (roadmap): a light, optional opt-in here; also offered after checkout. */}
+                  <label className="vouch-proof__consent">
+                    <input type="checkbox" name="affiliate" />
+                    <span><strong>Optional:</strong> create my affiliate code. My followers get {AFFILIATE_PERCENT}% off, and I earn {AFFILIATE_PERCENT}% of every order they place.</span>
+                  </label>
                   <div className="vouch-proof__actions">
                     <button type="button" className="vouch-proof__secondary" onClick={() => go('approval')}>← Back</button>
-                    <button type="submit" className="vouch-proof__primary">Add to cart</button>
+                    <button type="submit" className="vouch-proof__primary">{cart ? 'Check out' : 'Add to cart'}</button>
                   </div>
                 </form>
               </div>
@@ -352,8 +369,8 @@ export function PostToPay({ productTitle, variant, priceCents }: Props) {
                 <p className="vouch-proof__condition vouch-proof__if-pending-post">
                   Post within <strong>{demoStore.postingWindowDays} days of delivery</strong> and tag <strong className="vouch-proof__handle">{handle}</strong> to keep your {money(added.balanceCents)} discount. We’ll email you how and when to post.
                 </p>
-                {/* Affiliate code (roadmap): offered once the order is placed, so it adds nothing to checkout
-                    and lands just before the shopper writes their caption. */}
+                {/* Affiliate code (roadmap): shown here if they opted in before checkout, or offered again
+                    now, just before the shopper writes their caption. */}
                 <div className="vouch-proof__affiliate">
                   <span className="vouch-proof__step-icon" aria-hidden="true"><PercentIcon /></span>
                   {code ? (

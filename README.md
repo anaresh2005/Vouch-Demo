@@ -9,15 +9,21 @@ live storefront block in Vouch-MVP-Production (`extensions/vouch-post-to-pay`); 
 `post-to-pay-demo.css`. The merchant dashboard is not part of the demo; the "Not in this demo"
 menu describes it and lists roadmap features that aren't mocked.
 
-The only live call is the Instagram/TikTok account scan (Modash), made through a Supabase edge
-function (`modash-checkout-lookup`). Everything else, including checkout, is simulated.
+The only live call is the Instagram/TikTok account scan (Modash), made through the product's
+`modash-checkout-lookup` edge function (in Vouch-MVP-Production; the demo's own Supabase project was
+retired in November 2026). That endpoint allows 25 scans a day in total; after that the panel says
+the day's scans are used up. Everything else, including checkout, is simulated.
 
 Roadmap features mocked in the demo:
 - **More platforms.** Snapchat, Substack, X and LinkedIn sit alongside Instagram and TikTok. They
   aren't scanned: the panel says so, accepts any username and gives 100% off.
-- **Affiliate codes.** After the order is confirmed, the shopper can create a personal code (their
-  followers get 10% off; they earn 10% of each order). It's offered after checkout so it adds no
-  friction before payment and arrives just before they write their caption.
+- **Cart page placement.** The demo switches between the product page and the cart page. On the
+  cart page the offer covers the whole cart and checks out directly.
+- **Affiliate codes.** Shoppers get a personal code (their followers get 10% off; they earn 10% of
+  each order). It's an unticked, clearly optional box on the agreement step, and offered again on
+  the order confirmation, just before they write their caption.
+
+The store's theme follows Post to Pay's default look: 6px corners and 16px semibold Inter on buttons.
 
 > This is the demo site only. The production app lives in a separate repository.
 
@@ -25,7 +31,7 @@ Roadmap features mocked in the demo:
 
 - Vite + React + TypeScript
 - Tailwind CSS + shadcn/ui
-- Supabase edge functions (Modash proxy) — project `jscargzwjnoohsxvkmsx`
+- Account scans call the product's Supabase project (`zyvdwncrpjeltyfwnweh`)
 
 ## Local development
 
@@ -42,9 +48,9 @@ Create a `.env` (or set these in your host's dashboard). Only the `VITE_`-prefix
 values are read by the app at build time:
 
 ```
-VITE_SUPABASE_URL=https://jscargzwjnoohsxvkmsx.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=<anon key>
-VITE_SUPABASE_PROJECT_ID=jscargzwjnoohsxvkmsx
+VITE_SUPABASE_URL=https://zyvdwncrpjeltyfwnweh.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=<the product's publishable key>
+VITE_SUPABASE_PROJECT_ID=zyvdwncrpjeltyfwnweh
 ```
 
 ## Deployment
@@ -55,7 +61,8 @@ Build command: `npm run build` · Output: `dist/`.
 ## Demo access
 
 `/` is a password gate (stored in `sessionStorage`) that leads to the demo at `/checkout`.
-`/checkout` has a Desktop/Mobile switch; Mobile frames `/checkout/store` at a 375px width.
+`/checkout` switches between the product and cart pages and between Desktop and Mobile; Mobile
+frames `/checkout/store?page=…` in a 375 × 812 phone drawn in CSS.
 Old `/dashboard` links redirect to `/checkout`.
 
 ## Post to Pay discounts

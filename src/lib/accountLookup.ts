@@ -1,10 +1,12 @@
 import type { AccountStats, ScannedPlatform } from '@/types/vouch';
 import { supabase } from '@/integrations/supabase/client';
 
-// The demo's one live feature: a real Instagram or TikTok profile scan through the demo
-// project's Modash proxy (supabase/functions/modash-checkout-lookup).
+// The demo's one live feature: a real Instagram or TikTok profile scan through the product's
+// Modash proxy (Vouch-MVP-Production: supabase/functions/modash-checkout-lookup), which allows
+// 25 scans a day in total.
 
 export class AccountNotFoundError extends Error {}
+export class DailyLimitError extends Error {}
 
 // Session-level caches to avoid redundant Modash API calls
 const usernameCache: Record<string, AccountStats> = {};
@@ -67,6 +69,7 @@ export async function lookupUsername(username: string, platform: ScannedPlatform
   // A non-2xx reply arrives as `error`, with the function's JSON body on its response.
   const body = error ? await error.context?.json?.().catch(() => null) : data;
   if (body?.code === 'not_found') throw new AccountNotFoundError(cleanUsername);
+  if (error?.context?.status === 429) throw new DailyLimitError(body?.message);
   if (error || body?.error || !body?.data) throw new Error(body?.message ?? 'Account lookup failed');
 
   const profile = body.data;

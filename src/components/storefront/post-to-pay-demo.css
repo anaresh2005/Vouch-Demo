@@ -27,3 +27,4 @@
 .vouch-proof__code { display: flex; align-items: center; gap: 8px; margin-top: 6px; padding: 4px 4px 4px 12px; border-radius: 6px; background: var(--vouch-subtle); box-shadow: var(--vouch-edge); }
 .vouch-proof__code span { flex: 1; min-width: 0; overflow-wrap: anywhere; color: var(--vouch-text); font-size: 16px; font-weight: 600; letter-spacing: .04em; }
 .vouch-proof .vouch-proof__code button { height: 32px; padding: 0 12px; border-radius: 6px; font-size: 14px; font-weight: 600; }
+.vouch-proof__consent strong { color: var(--vouch-text); font-weight: 600; }
