@@ -6,8 +6,9 @@ It shows the shopper's Post to Pay flow as we expect it to look by the end of 20
 fictional merchant's product page (Harbor & Pine). The Post to Pay panel is a React port of the
 live storefront block in Vouch-MVP-Production (`extensions/vouch-post-to-pay`); its stylesheet,
 `src/components/storefront/post-to-pay.css`, is copied verbatim, and demo-only additions live in
-`post-to-pay-demo.css`. The merchant dashboard is not part of the demo; the "Not in this demo"
-menu describes it and lists roadmap features that aren't mocked.
+`post-to-pay-demo.css`. The merchant dashboard is not part of the demo. The Roadmap button opens
+`/roadmap`, a development timeline (live today, by the end of 2026, next) that marks what the demo
+shows; its content is in `src/lib/roadmap.ts`.
 
 The only live call is the Instagram/TikTok account scan (Modash), made through the product's
 `modash-checkout-lookup` edge function (in Vouch-MVP-Production; the demo's own Supabase project was
@@ -17,11 +18,12 @@ the day's scans are used up. Everything else, including checkout, is simulated.
 Roadmap features mocked in the demo:
 - **More platforms.** Snapchat, Substack, X and LinkedIn sit alongside Instagram and TikTok. They
   aren't scanned: the panel says so, accepts any username and gives 100% off.
-- **Cart page placement.** The demo switches between the product page and the cart page. On the
-  cart page the offer covers the whole cart and checks out directly.
-- **Affiliate codes.** Shoppers get a personal code (their followers get 10% off; they earn 10% of
-  each order). It's an unticked, clearly optional box on the agreement step, and offered again on
-  the order confirmation, just before they write their caption.
+- **Cart and checkout placements.** The demo switches between the product, cart and checkout pages.
+  On the cart and checkout pages the offer covers the whole order. The checkout page shows mock
+  express options (Shop Pay, PayPal, G Pay), Post to Pay and a disabled card form.
+- **Ambassador codes.** Shoppers get a personal code (their followers get 10% off; they earn 10% of
+  each order). It's a compact, optional line on the "You qualify!" step, and offered again on the
+  order confirmation, just before they write their caption.
 
 The store's theme follows Post to Pay's default look: 6px corners and 16px semibold Inter on buttons.
 
@@ -61,7 +63,7 @@ Build command: `npm run build` · Output: `dist/`.
 ## Demo access
 
 `/` is a password gate (stored in `sessionStorage`) that leads to the demo at `/checkout`.
-`/checkout` switches between the product and cart pages and between Desktop and Mobile; Mobile
+`/checkout` switches between the product, cart and checkout pages and between Desktop and Mobile; Mobile
 frames `/checkout/store?page=…` in a 375 × 812 phone drawn in CSS.
 Old `/dashboard` links redirect to `/checkout`.
 

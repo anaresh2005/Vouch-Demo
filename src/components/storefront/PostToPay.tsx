@@ -12,7 +12,7 @@ import './post-to-pay-demo.css';
 // A React port of the live storefront block (Vouch-MVP-Production:
 // extensions/vouch-post-to-pay/blocks/post-to-pay.liquid and assets/post-to-pay.css, copied
 // verbatim). Markup, class names and wording follow the block so the shared stylesheet applies
-// unchanged. Demo differences (roadmap mocks): more platforms, a cart-page placement, affiliate codes;
+// unchanged. Demo differences (roadmap mocks): more platforms, cart and checkout placements, ambassador codes;
 // the discount follows the demo curve, and the account scan is the only live call. Checkout is simulated.
 
 type Step = 'platform' | 'username' | 'approval' | 'offer' | 'added' | 'confirmation';
@@ -29,15 +29,15 @@ const PLATFORMS: Record<SocialPlatform, { name: string; format: string; content:
   linkedin: { name: 'LinkedIn', format: 'Post', content: 'a LinkedIn post', scanned: false },
 };
 
-// Demo affiliate program: the shopper's followers get 10% off with their code, and they earn 10% of each order.
+// Demo ambassador (affiliate) program: the shopper's followers get 10% off with their code, and they earn 10% of each order.
 const AFFILIATE_PERCENT = 10;
 const affiliateCode = (username: string) => `${username.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10)}${AFFILIATE_PERCENT}`;
 
 const compact = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
 
 interface Props {
-  /** Product page: the item is added to the cart. Cart page (roadmap): the offer covers the whole cart and checks out. */
-  placement: 'product' | 'cart';
+  /** Product page: the item is added to the cart. Cart and checkout pages (roadmap): the offer covers the whole order. */
+  placement: 'product' | 'cart' | 'checkout';
   /** What the offer covers, e.g. "Everyday Bottle · Slate · Quantity 1". */
   summary: string;
   priceCents: number;
@@ -50,7 +50,7 @@ interface Account {
 }
 
 export function PostToPay({ placement, summary, priceCents }: Props) {
-  const cart = placement === 'cart';
+  const wholeOrder = placement !== 'product';
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>('platform');
   const [platform, setPlatform] = useState<SocialPlatform>('instagram');
@@ -119,11 +119,9 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
     }
   };
 
-  const accept = (event: FormEvent<HTMLFormElement>) => {
+  const accept = (event: FormEvent) => {
     event.preventDefault();
-    const optIn = event.currentTarget.elements.namedItem('affiliate') as HTMLInputElement;
-    if (optIn.checked && account) setCode(affiliateCode(account.username));
-    if (cart) {
+    if (wholeOrder) {
       setAddedCount(1);
       go('confirmation');
     } else {
@@ -154,7 +152,12 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
   };
 
   const qualified = !!offer && !addedCount;
-  const launchLabel = !qualified ? 'Post to Pay' : cart ? 'Check out with Post to Pay' : 'Add to cart with Post to Pay';
+  const launchLabel = !qualified ? 'Post to Pay' : {
+    product: 'Add to cart with Post to Pay',
+    cart: 'Check out with Post to Pay',
+    checkout: 'Pay with Post to Pay',
+  }[placement];
+  const createCode = () => account && setCode(affiliateCode(account.username));
 
   return (
     <div
@@ -287,6 +290,21 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
                 <Deal quote={offer} />
                 <p className="vouch-proof__shipping vouch-proof__if-free-shipping"><TruckIcon />Includes free express shipping</p>
                 <p className="vouch-proof__condition">Post about it on {info.name} within <strong>{demoStore.postingWindowDays} days of delivery</strong> to keep your discount.</p>
+                {/* Ambassador code (roadmap): a small, optional offer here, and again after checkout. */}
+                <p className="vouch-proof__ambassador">
+                  <PercentIcon size={16} />
+                  {code ? (
+                    <>
+                      <span>Your ambassador code: <strong>{code}</strong></span>
+                      <button type="button" onClick={copyCode}>{copied ? 'Copied' : 'Copy'}</button>
+                    </>
+                  ) : (
+                    <>
+                      <span><strong>Become an ambassador.</strong> Earn {AFFILIATE_PERCENT}% of orders from your own code.</span>
+                      <button type="button" onClick={createCode}>Get code</button>
+                    </>
+                  )}
+                </p>
                 <div className="vouch-proof__actions">
                   <button type="button" className="vouch-proof__secondary" onClick={() => go('username')}>← Back</button>
                   <button type="button" className="vouch-proof__primary" onClick={() => go('offer')}>Continue</button>
@@ -297,7 +315,7 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
             {step === 'offer' && offer && (
               <div data-step="offer">
                 <h3 tabIndex={-1} ref={heading}>How it works</h3>
-                <p className="vouch-proof__explanation">{summary}. {cart ? 'This agreement covers your whole cart.' : 'This agreement covers every item you add with Post to Pay.'}</p>
+                <p className="vouch-proof__explanation">{summary}. {{ product: 'This agreement covers every item you add with Post to Pay.', cart: 'This agreement covers your whole cart.', checkout: 'This agreement covers your whole order.' }[placement]}</p>
                 <ol className="vouch-proof__steps">
                   <li>
                     <span className="vouch-proof__step-icon" aria-hidden="true"><CardIcon /></span>
@@ -328,14 +346,9 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
                     <input type="checkbox" name="contentRights" defaultChecked />
                     <span>I grant {demoStore.name} the rights to publish and promote the content I create for this order.</span>
                   </label>
-                  {/* Affiliate code (roadmap): a light, optional opt-in here; also offered after checkout. */}
-                  <label className="vouch-proof__consent">
-                    <input type="checkbox" name="affiliate" />
-                    <span><strong>Optional:</strong> create my affiliate code. My followers get {AFFILIATE_PERCENT}% off, and I earn {AFFILIATE_PERCENT}% of every order they place.</span>
-                  </label>
                   <div className="vouch-proof__actions">
                     <button type="button" className="vouch-proof__secondary" onClick={() => go('approval')}>← Back</button>
-                    <button type="submit" className="vouch-proof__primary">{cart ? 'Check out' : 'Add to cart'}</button>
+                    <button type="submit" className="vouch-proof__primary">{{ product: 'Add to cart', cart: 'Check out', checkout: 'Pay now' }[placement]}</button>
                   </div>
                 </form>
               </div>
@@ -369,13 +382,13 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
                 <p className="vouch-proof__condition vouch-proof__if-pending-post">
                   Post within <strong>{demoStore.postingWindowDays} days of delivery</strong> and tag <strong className="vouch-proof__handle">{handle}</strong> to keep your {money(added.balanceCents)} discount. We’ll email you how and when to post.
                 </p>
-                {/* Affiliate code (roadmap): shown here if they opted in before checkout, or offered again
+                {/* Ambassador code (roadmap): shown here if they got one on the qualify step, or offered again
                     now, just before the shopper writes their caption. */}
                 <div className="vouch-proof__affiliate">
                   <span className="vouch-proof__step-icon" aria-hidden="true"><PercentIcon /></span>
                   {code ? (
                     <div>
-                      <strong>Your code</strong>
+                      <strong>Your ambassador code</strong>
                       <div className="vouch-proof__code">
                         <span>{code}</span>
                         <button type="button" className="vouch-proof__secondary" onClick={copyCode}>{copied ? 'Copied' : 'Copy'}</button>
@@ -384,9 +397,9 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
                     </div>
                   ) : (
                     <div>
-                      <strong>Earn from your post</strong>
+                      <strong>Become an ambassador</strong>
                       <p>Get your own code: your followers get {AFFILIATE_PERCENT}% off, and you earn {AFFILIATE_PERCENT}% of every order they place.</p>
-                      <button type="button" className="vouch-proof__secondary" onClick={() => setCode(affiliateCode(account!.username))}>Create my code</button>
+                      <button type="button" className="vouch-proof__secondary" onClick={createCode}>Create my code</button>
                     </div>
                   )}
                 </div>
@@ -469,7 +482,7 @@ const PLATFORM_ICONS: Record<SocialPlatform, () => JSX.Element> = {
   x: XIcon,
   linkedin: LinkedInIcon,
 };
-const PercentIcon = () => <Svg size={20}><line x1="19" x2="5" y1="5" y2="19" /><circle cx="6.5" cy="6.5" r="2.5" /><circle cx="17.5" cy="17.5" r="2.5" /></Svg>;
+const PercentIcon = ({ size = 20 }: { size?: number }) => <Svg size={size}><line x1="19" x2="5" y1="5" y2="19" /><circle cx="6.5" cy="6.5" r="2.5" /><circle cx="17.5" cy="17.5" r="2.5" /></Svg>;
 const FollowersIcon = () => <Svg size={14}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></Svg>;
 const HeartIcon = () => <Svg size={14}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></Svg>;
 const TruckIcon = () => <Svg size={16}><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" /><path d="M15 18H9" /><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14" /><circle cx="17" cy="18" r="2" /><circle cx="7" cy="18" r="2" /></Svg>;

@@ -3,6 +3,8 @@
 /* Platforms beyond Instagram are demo-only. The block colours its platform tile, account icon and
    avatar with --vouch-instagram(-tint); data-platform swaps in each platform's colour (on the host
    for the chosen platform, and on each tile of the platform list). */
+/* Instagram restates the block's own pink, so its tile doesn't inherit the last platform chosen. */
+.vouch-proof [data-platform="instagram"] { --vouch-instagram: #c13584; --vouch-instagram-tint: #fdedf5; }
 .vouch-proof [data-platform="tiktok"], .vouch-proof[data-platform="tiktok"],
 .vouch-proof [data-platform="x"], .vouch-proof[data-platform="x"] { --vouch-instagram: #000; --vouch-instagram-tint: var(--vouch-subtle); }
 .vouch-proof [data-platform="snapchat"], .vouch-proof[data-platform="snapchat"] { --vouch-instagram: #000; --vouch-instagram-tint: #fffbc2; }
@@ -27,4 +29,11 @@
 .vouch-proof__code { display: flex; align-items: center; gap: 8px; margin-top: 6px; padding: 4px 4px 4px 12px; border-radius: 6px; background: var(--vouch-subtle); box-shadow: var(--vouch-edge); }
 .vouch-proof__code span { flex: 1; min-width: 0; overflow-wrap: anywhere; color: var(--vouch-text); font-size: 16px; font-weight: 600; letter-spacing: .04em; }
 .vouch-proof .vouch-proof__code button { height: 32px; padding: 0 12px; border-radius: 6px; font-size: 14px; font-weight: 600; }
-.vouch-proof__consent strong { color: var(--vouch-text); font-weight: 600; }
+
+/* Ambassador code (roadmap) on the qualify step: one compact, optional line. */
+.vouch-proof__ambassador { display: flex; align-items: center; gap: 8px; margin-top: 8px !important; padding: 6px 6px 6px 12px; border-radius: 6px; box-shadow: var(--vouch-edge); color: var(--vouch-body); font-size: 13px; line-height: 18px; }
+.vouch-proof__ambassador svg { color: var(--vouch-accent); }
+.vouch-proof__ambassador span { flex: 1; min-width: 0; }
+.vouch-proof__ambassador strong { color: var(--vouch-text); font-weight: 600; }
+.vouch-proof .vouch-proof__ambassador button { flex-shrink: 0; height: 28px; padding: 0 10px; border-radius: 6px; background: var(--vouch-accent-tint); color: var(--vouch-accent); font-size: 13px; font-weight: 600; }
+.vouch-proof .vouch-proof__ambassador button:hover { background: color-mix(in srgb, var(--vouch-accent) 12%, #fff); }
