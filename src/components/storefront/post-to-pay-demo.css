@@ -1,0 +1,7 @@
+/* Demo additions on top of the live block's stylesheet (post-to-pay.css, kept verbatim).
+   TikTok is a demo-only platform: its card and account icon use TikTok's black on Vouch's subtle grey. */
+.vouch-proof { --vouch-tiktok: #000; --vouch-tiktok-tint: var(--vouch-subtle); }
+.vouch-proof__platforms { display: grid; gap: 8px; }
+.vouch-proof__tiktok { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px; background: var(--vouch-tiktok-tint); color: var(--vouch-tiktok); }
+.vouch-proof[data-platform="tiktok"] .vouch-proof__account-icon,
+.vouch-proof[data-platform="tiktok"] .vouch-proof__avatar { background: var(--vouch-tiktok-tint); color: var(--vouch-tiktok); }

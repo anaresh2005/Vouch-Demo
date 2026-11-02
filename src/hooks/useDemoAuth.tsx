@@ -5,7 +5,6 @@ interface DemoAuthContextType {
   isDemoAuthenticated: boolean;
   loading: boolean;
   demoLogin: (password: string) => boolean;
-  demoLogout: () => void;
 }
 
 const DemoAuthContext = createContext<DemoAuthContextType | undefined>(undefined);
@@ -35,18 +34,8 @@ export function DemoAuthProvider({ children }: { children: ReactNode }) {
     return false;
   };
 
-  const demoLogout = () => {
-    sessionStorage.removeItem(STORAGE_KEY);
-    // Clear tour state so welcome popup shows on next login
-    sessionStorage.removeItem('vouch_tour_completed');
-    sessionStorage.removeItem('vouch_welcome_dismissed');
-    // Reset sidebar to expanded state for next login
-    localStorage.removeItem('sidebar-collapsed');
-    setIsDemoAuthenticated(false);
-  };
-
   return (
-    <DemoAuthContext.Provider value={{ isDemoAuthenticated, loading, demoLogin, demoLogout }}>
+    <DemoAuthContext.Provider value={{ isDemoAuthenticated, loading, demoLogin }}>
       {children}
     </DemoAuthContext.Provider>
   );

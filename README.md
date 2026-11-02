@@ -2,10 +2,15 @@
 
 The standalone investor demo for Vouch, deployed at **demo.vouch.so**.
 
-It presents a password-gated walkthrough of the Vouch dashboard and "Pay with a Post"
-checkout, running on mock data so it can be explored without a real account. The only
-live backend dependency is influencer lookup (Modash), proxied through a dedicated
-Supabase project's edge functions.
+It shows the shopper's Post to Pay flow as we expect it to look by the end of 2026, on a
+fictional merchant's product page (Harbor & Pine). The Post to Pay panel is a React port of the
+live storefront block in Vouch-MVP-Production (`extensions/vouch-post-to-pay`); its stylesheet,
+`src/components/storefront/post-to-pay.css`, is copied verbatim, and demo-only additions live in
+`post-to-pay-demo.css`. The merchant dashboard is not part of the demo; the "Not in this demo"
+menu describes it and lists roadmap features that aren't mocked.
+
+The only live call is the Instagram/TikTok account scan (Modash), made through a Supabase edge
+function (`modash-checkout-lookup`). Everything else, including checkout, is simulated.
 
 > This is the demo site only. The production app lives in a separate repository.
 
@@ -42,18 +47,13 @@ Build command: `npm run build` · Output: `dist/`.
 
 ## Demo access
 
-The landing page is a single password gate. The demo password unlocks the dashboard
-for the session (stored in `sessionStorage`).
+`/` is a password gate (stored in `sessionStorage`) that leads to the demo at `/checkout`.
+`/checkout` has a Desktop/Mobile switch; Mobile frames `/checkout/store` at a 375px width.
+Old `/dashboard` links redirect to `/checkout`.
 
 ## Post to Pay discounts
 
-Qualifying accounts receive 10% off at 2,500 followers, increasing linearly to
-100% off at 10,000 followers (capped at 100%). The formula is
-`10 + 90 * clamp((followers - 2500) / 7500, 0, 1)` percent.
-Accounts below 2,500 followers do not qualify. Eligibility depends only on follower
-count; engagement rate and sponsored-post count are not requirements.
-The demo applies the discount to the displayed order total including mock tax.
-
-The remaining balance is shown as payable today. Posting within 72 hours of
-delivery retains the discount; missing the deadline would charge the saved amount.
-All payments and orders in this flow remain simulated.
+The demo is deliberately generous: every account gets at least 25% off. From 1,000 followers the
+discount rises linearly to 100% off at 2,500 followers, rounded to the nearest 5%
+(`src/lib/postToPayDiscount.ts`). The discount applies to the product price; tax isn't charged
+today, and missing the posting window would charge the discount plus tax.

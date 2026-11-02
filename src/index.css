@@ -5,59 +5,76 @@
 @tailwind utilities;
 
 @layer base {
+  /* Stripe-style structure with Vouch's brand: one accent (periwinkle #4A54E2), blue-tinted
+     greys, flat white surfaces edged by 1px hairlines. Values follow the Stripe UI reference
+     style guide (Sept 2026). Colors are HSL channels for Tailwind's hsl(var(--x) / alpha). */
   :root {
-    /* Vouch Brand Colors */
-    --background: 0 0% 95%;
-    --foreground: 0 0% 10%;
+    --background: 0 0% 100%;
+    --foreground: 214 45% 18%;          /* #1A2C44 primary text */
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 10%;
+    --card-foreground: 214 45% 18%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
-    
-    /* Royal Periwinkle - Primary */
-    --primary: 236 73% 59%;
+    --popover-foreground: 214 45% 18%;
+
+    --primary: 236 72% 59%;             /* #4A54E2 periwinkle: links, primary buttons, selection, focus */
+    --primary-hover: 236 61% 52%;
     --primary-foreground: 0 0% 100%;
-    
-    /* Whisper Bone - Secondary */
-    --secondary: 38 78% 91%;
-    --secondary-foreground: 0 0% 15%;
-    
-    --muted: 38 25% 92%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 38 78% 91%;
-    --accent-foreground: 0 0% 15%;
-    --destructive: 0 84% 60%;
+
+    --secondary: 210 37% 97%;           /* #F4F7FA subtle surface */
+    --secondary-foreground: 214 35% 24%;
+    --muted: 210 37% 97%;
+    --muted-foreground: 218 17% 48%;    /* #667691 metadata, hints */
+    --accent: 210 18% 93%;              /* #EBEEF1 hover fill */
+    --accent-foreground: 214 45% 18%;
+    --destructive: 346 83% 41%;         /* #C0123C */
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 82%;
-    --input: 0 0% 85%;
-    --ring: 236 73% 59%;
-    --radius: 0.75rem;
-    
-    /* Vouch custom tokens */
-    --vouch-primary: 236 73% 59%;
-    --vouch-bone: 38 78% 91%;
-    --vouch-gradient: linear-gradient(135deg, hsl(236 73% 59%) 0%, hsl(236 73% 48%) 100%);
-    --vouch-glow: 0 0 40px hsl(236 73% 59% / 0.3);
-    
-    /* Periwinkle Drift gradient: #4A54E2 → #646BD5 (bottom to top) */
-    --vouch-periwinkle-drift: linear-gradient(to top, hsl(236, 73%, 59%) 0%, hsl(236, 60%, 62%) 100%);
-    /* Dust Cloud gradient: #FAEDD7 → #BDAE93 (bottom to top) */
-    --vouch-dust-cloud: linear-gradient(to top, hsl(38, 78%, 91%) 0%, hsl(38, 25%, 66%) 100%);
-    --success: 142 76% 36%;
+    --border: 211 32% 87%;              /* #D4DEE9 hairline */
+    --input: 211 32% 87%;
+    --ring: 236 72% 59%;
+    --radius: 0.375rem;
+
+    --heading: 235 12% 21%;             /* #30313D page titles */
+    --text-body: 226 12% 29%;           /* #414552 labels, figures */
+    --text-secondary: 215 27% 32%;      /* #3C4F69 section labels, table headers */
+    --text-faint: 216 21% 66%;          /* #95A4BA placeholders */
+    --divider: 210 36% 95%;             /* #ECF1F6 row and section rules */
+    --skeleton: 210 18% 93%;
+    --banner: 210 73% 20%;              /* #0E3359 mode banner */
+
+    /* Status badges: fill / text / border */
+    --success: 104 91% 23%;
     --success-foreground: 0 0% 100%;
-    --warning: 38 92% 50%;
+    --success-bg: 95 84% 93%;
+    --success-border: 94 82% 69%;
+    --warning: 18 100% 35%;
     --warning-foreground: 0 0% 100%;
+    --warning-bg: 54 93% 89%;
+    --warning-border: 47 89% 76%;
+    --danger-bg: 348 83% 98%;
+    --danger-border: 346 83% 91%;
+    /* Attention (orange): a deadline has passed and a charge is coming; between warning and danger. */
+    --attention: 14 88% 40%;
+    --attention-bg: 30 100% 92%;
+    --attention-border: 27 92% 78%;
+    --info: 221 73% 45%;
+    --info-bg: 219 100% 97%;
+    --info-border: 219 96% 89%;
+    --neutral: 216 21% 40%;
+    --neutral-bg: 210 37% 97%;
+    --neutral-border: 211 32% 87%;
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 0% 25%;
-    --sidebar-primary: 236 73% 59%;
+    --sidebar-foreground: 214 45% 18%;
+    --sidebar-primary: 236 72% 59%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 38 78% 91%;
-    --sidebar-accent-foreground: 0 0% 15%;
-    --sidebar-border: 0 0% 92%;
-    --sidebar-ring: 236 73% 59%;
+    --sidebar-accent: 210 18% 93%;
+    --sidebar-accent-foreground: 214 45% 18%;
+    --sidebar-border: 210 36% 95%;
+    --sidebar-ring: 236 72% 59%;
   }
 
+  /* Dark mode is switched off for now (see ThemeProvider in App.tsx). These values are kept
+     so it can return, but they have not been redesigned. */
   .dark {
     --background: 0 0% 8%;
     --foreground: 0 0% 98%;
@@ -79,12 +96,6 @@
     --input: 0 0% 20%;
     --ring: 236 73% 65%;
     
-    --vouch-gradient: linear-gradient(135deg, hsl(236, 73%, 65%) 0%, hsl(236, 73%, 55%) 100%);
-    --vouch-glow: 0 0 40px hsl(236 73% 65% / 0.35);
-    
-    /* Dark mode gradients */
-    --vouch-periwinkle-drift: linear-gradient(to top, hsl(236, 73%, 65%) 0%, hsl(236, 60%, 68%) 100%);
-    --vouch-dust-cloud: linear-gradient(to top, hsl(38, 40%, 20%) 0%, hsl(38, 25%, 35%) 100%);
     --success: 142 70% 45%;
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 55%;
@@ -106,66 +117,13 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body antialiased;
+    @apply bg-background text-foreground font-body text-sm antialiased;
+    /* Digits line up in every figure and column, not just in tables. */
+    font-variant-numeric: tabular-nums;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display;
+    @apply font-display text-heading;
   }
-}
-
-
-@layer utilities {
-  .vouch-gradient {
-    background: var(--vouch-gradient);
-  }
-  
-  .vouch-gradient-text {
-    background: var(--vouch-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  .vouch-glow {
-    box-shadow: var(--vouch-glow);
-  }
-  
-  .glass {
-    @apply bg-card/80 backdrop-blur-2xl;
-    border: 1px solid hsl(var(--border) / 0.3);
-    box-shadow: 
-      inset 0 1px 0 0 hsl(236 73% 59% / 0.10),
-      inset 0 -1px 0 0 hsl(0 0% 0% / 0.04),
-      0 4px 24px -4px hsl(0 0% 0% / 0.08);
-  }
-
-  .vouch-bone {
-    background-color: hsl(var(--vouch-bone));
-  }
-
-  .vouch-periwinkle-drift {
-    background: var(--vouch-periwinkle-drift);
-  }
-
-  .vouch-dust-cloud {
-    background: var(--vouch-dust-cloud);
-  }
-
-  .vouch-surface {
-    background: linear-gradient(
-      135deg,
-      hsl(236 73% 59% / 0.06) 0%,
-      hsl(38 78% 91% / 0.10) 100%
-    );
-  }
-
-  /* Stagger animation delays */
-  .stagger-1 { animation-delay: 50ms; }
-  .stagger-2 { animation-delay: 100ms; }
-  .stagger-3 { animation-delay: 150ms; }
-  .stagger-4 { animation-delay: 200ms; }
-  .stagger-5 { animation-delay: 250ms; }
-  .stagger-6 { animation-delay: 300ms; }
 }
 
 /* Disable all transitions during theme change to prevent flickering */

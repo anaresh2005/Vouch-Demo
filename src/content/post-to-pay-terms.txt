@@ -1,0 +1,260 @@
+Effective date: October 7, 2026
+
+These Post to Pay Terms ("Terms") govern your use of the Post to Pay purchase option and constitute a binding agreement between you and Vouch Commerce, Inc., a Delaware corporation ("Vouch," "we," "us," or "our"). They apply each time you place an order using Post to Pay at a participating merchant.
+
+Please read these Terms carefully. Section 9 provides that, if your order is treated as having no Qualifying Post, the Deferred Balance of the purchase price, plus the tax on your order, will be charged to the payment method you used for your order. Section 22 contains a binding arbitration provision and a class action waiver that affect how disputes between you and Vouch are resolved.
+
+By completing a Post to Pay order you accept these Terms as they exist at that time.
+
+1. The Parties and Their Roles
+
+Post to Pay enables you to purchase products from a participating merchant ("Merchant") by paying part of the price when you place your order, and to owe nothing further in consideration of publishing social media content concerning those products. Your Post to Pay offer applies to every product in your order (each a "Covered Product").
+
+1.1 The Merchant. The Merchant is the seller of record. The Merchant sets the price, fulfills and ships the order, administers returns, exchanges, damage and warranty claims, and charges your payment method. All obligations relating to the Covered Products and their sale are obligations of the Merchant.
+
+1.2 Vouch. Vouch operates the Post to Pay process. Vouch evaluates the social media account you submit, calculates your discount against targets configured by the Merchant, specifies the requirements applicable to your post, records and reviews your post, and communicates the outcome to the Merchant. The Merchant may also review your post and flag it, as set out in Section 7. Your obligation to publish a post is owed to Vouch.
+
+1.3 Limitation of Vouch's role. Vouch is not a party to the sale of the Covered Products, does not sell, supply, fulfill or ship any product, does not collect or hold your payment, and receives no part of any amount charged to you under these Terms.
+
+2. Offer Details
+
+Each Merchant configures its own parameters for Post to Pay orders. Before you place a Post to Pay order, Vouch displays the parameters applicable to it, including your discount and any maximum amount of it set by the Merchant, the full price of your order, the amount payable when you place the order, the portion of the price that is deferred and will be charged under Section 9 if no Qualifying Post is published (the "Deferred Balance"), whether an authorization may be placed on your payment method under Section 9.7, your Posting Deadline, the post formats the Merchant accepts and the other requirements applicable to your post, and the content rights granted to the Merchant (collectively, your "Offer Details"). Tax on your order is calculated and shown at checkout, once your delivery address is known, and is not part of your Offer Details. Any maximum amount of your discount applies to your entire saving, including tax. Because tax is not known until checkout, where a maximum amount applies your saving may be slightly less than it.
+
+Your Offer Details are incorporated into and form part of these Terms. Where these Terms describe a matter in general and your Offer Details specify a figure, period or requirement for your order, your Offer Details govern that order.
+
+3. Eligibility
+
+To use Post to Pay you must be at least 18 years of age, located in the United States, and legally capable of entering into a binding contract. By accepting these Terms you represent and warrant that each of these is true.
+
+No account is required. Each Post to Pay order constitutes a separate agreement, formed when you place that order.
+
+You represent and warrant that all information you submit, including your social media handle, contact details and shipping address, is accurate, complete and your own.
+
+4. Account Evaluation
+
+4.1 Scope of evaluation. When you initiate a Post to Pay order you select a platform and submit a username. Vouch then evaluates publicly available information concerning that account, including follower count, engagement metrics, indicators of whether the account is authentic and operated by an individual, whether the account meets the eligibility criteria set by the Merchant, and whether its content satisfies the brand safety standards configured by the Merchant (for example, standards excluding accounts that display profanity, nudity or violence).
+
+4.2 Effect of the evaluation. Follower count and engagement determine the magnitude of your discount. An account may be found ineligible where it does not appear to be authentic and operated by an individual, where it does not meet the Merchant's brand safety standards, or where it does not meet the Merchant's eligibility criteria, which may include a minimum follower count, a minimum engagement level, and the types of account that may participate (for example, excluding brand, meme and fan accounts). Where an account is found ineligible when you submit it, Vouch will tell you so before you place an order and will state the general ground. You may submit a different username. Vouch may also review your account after your order is placed, as set out in Section 4.4.
+
+4.3 No verification of ownership. Vouch does not verify that you own or control the account you submit. You represent and warrant that you control the submitted account and are able to publish from it. Submission of an account you do not control does not relieve you of any obligation under these Terms, including the payment obligation in Section 9.
+
+4.4 Review after your order. Vouch may review the account you submitted, and the content published from it, after your order is placed and before it is shipped. Where Vouch determines that the account does not appear to be authentic and operated by an individual, does not meet the Merchant's brand safety standards, or that the order appears fraudulent, was placed in error or breaches these Terms, Vouch may cancel your order on the Merchant's behalf. If your order is cancelled, the amount you paid is refunded to your payment method in full, any authorization placed on your payment method is released, no charge is made under Section 9, and Vouch will tell you the general ground.
+
+5. Your Order
+
+5.1 Sale terms. Your order is placed with the Merchant through its ordinary checkout process. Sales tax is calculated in accordance with applicable law and is collected as described in Sections 9 and 17.
+
+5.2 Free shipping. Shipping on a Post to Pay order is free, and stays free whether or not you publish a Qualifying Post. Only shipping options that the Merchant provides free of charge are available with Post to Pay.
+
+5.3 Combination with other offers. The Merchant decides whether Post to Pay may be combined with its other discounts and promotions. Where it may, any promotion for which you qualify is applied before your Post to Pay discount, and you keep that promotion whether or not you publish a Qualifying Post. Where it may not, Post to Pay is not available for an order that uses another discount or promotion, and Vouch will tell you so before you place your order. Your other discount or promotion is unaffected.
+
+5.4 Total payable. The amount displayed to you as payable when you place your order is the amount that will be charged at that time.
+
+5.5 Whole order. Post to Pay applies to your whole order, and every product in it must be eligible. A subscription purchase or a backorder, for example, is not eligible. Where any product in your cart is not eligible, Post to Pay is not available for that order and Vouch will tell you so before you place it. Vouch will not remove any product from your cart, and you may check out in the ordinary way.
+
+5.6 Personal to your order. Your Post to Pay offer and discount apply only to the order for which they were offered. You may not sell, transfer, share or reuse them, and they may not be applied to any other order.
+
+6. Your Posting Obligation
+
+In consideration of your discount, you agree to publish one post concerning the Covered Products, from the account submitted when placing your order, on or before your Posting Deadline.
+
+6.1 Requirements of a Qualifying Post. A post qualifies under these Terms (a "Qualifying Post") only if all of the following are satisfied. The post must be published on the platform you selected; published from the account you submitted when placing your order; in a format the Merchant accepts, as stated in your Offer Details (for example, an in-feed post, carousel, Reel, Story or TikTok video); tagged to the Merchant; must display every Covered Product clearly in the same post; must not make a false or misleading statement of fact about the Merchant or any Covered Product; must not contain profanity; and must meet the content standards in Section 6.5. Your Offer Details set out these requirements together with any additional requirements configured by the Merchant. Where more than one post is published within the posting window, the first post satisfying every requirement is your Qualifying Post. A post in a format that your Offer Details do not list as accepted is not a Qualifying Post, even if it satisfies every other requirement.
+
+6.2 Disclosure. You have received products at a discount in consideration of publishing content concerning them, and United States law requires that this connection be disclosed to your audience. You must disclose that connection clearly and conspicuously in the caption of your post. Use of a platform's paid partnership or branded content tool is encouraged but does not satisfy this requirement on its own. Compliance with this Section 6.2 is a material obligation under these Terms.
+
+6.3 Posting Deadline. Your posting window opens when every Covered Product has been delivered (where your order arrives in more than one shipment, when the last one is delivered) and closes at the time stated in your Offer Details (your "Posting Deadline"). Vouch will send reminders by email before your Posting Deadline, and may also send them by text message. Failure to receive a reminder does not extend your Posting Deadline.
+
+6.4 Editorial independence. Neither Vouch nor the Merchant directs the content of your post. Subject only to the requirements in Sections 6.1, 6.2 and 6.5, the content, format and opinions expressed in your post are determined solely by you.
+
+6.5 Content standards. A post concerning a Covered Product must not contain nudity or sexually explicit material, or violence, and must not be unlawful, defamatory, harassing, hateful or discriminatory. Profanity is not a breach of these content standards: a post containing profanity is not a Qualifying Post, but it may be fixed or replaced under Section 7.3. A post that does not meet these standards is not a Qualifying Post and cannot be fixed or replaced under Section 7. If such a post is flagged under Section 7.2, your order is treated as having no Qualifying Post and Section 9 applies, whether or not you publish another post. The post may be reported to the platform on which it was published, and Vouch or the Merchant may require you to remove it. Access to Post to Pay may also be restricted under Section 15.
+
+7. Review of Your Post and Remediation
+
+7.1 Approval. When Vouch records a post you have published that appears to satisfy Section 6.1, that post is approved as your Qualifying Post. It remains your Qualifying Post unless it is flagged under this Section and not fixed or replaced in time. Where more than one post is published within the posting window, the first post satisfying every requirement is the one approved. Vouch may continue to review a post after approving it, and may withdraw its approval by flagging the post under Section 7.2. Vouch may take reasonable time to review a post before applying the discount described in Section 9.1.
+
+7.2 Flags. An approved post may be flagged:
+
+- (a) by Vouch, where the Merchant's tag is absent, any Covered Product is not clearly displayed, the post makes a false or misleading statement of fact about the Merchant or any Covered Product, or the post has been removed, archived or made inaccessible;
+
+- (b) by Vouch or the Merchant, where the post contains profanity; and
+
+- (c) by Vouch or the Merchant, where the post does not meet the content standards in Section 6.5.
+
+A post flagged under paragraph (a) or (b) may be fixed or replaced under Section 7.3. A post flagged under paragraph (c) cannot be fixed or replaced, with the effect set out in Section 6.5.
+
+A post can no longer be flagged once the discount described in Section 9.1 has been applied to your order.
+
+7.3 Twenty-four hours to fix or replace. Vouch will notify you of any flag, and a flagged post stops counting as your Qualifying Post. Where a post is flagged for any reason other than a breach of the content standards in Section 6.5, you have twenty-four (24) hours from the time of that notice to fix the post or to publish a replacement that satisfies every requirement of Section 6.1, whether or not your Posting Deadline has passed. A post fixed or replaced within that period is your Qualifying Post. Otherwise, your order is treated as having no Qualifying Post and Section 9 applies. A post flagged for a breach of the content standards in Section 6.5 cannot be fixed or replaced, as set out in that Section.
+
+7.4 No obligation to review. Neither Vouch nor the Merchant is obliged to review your post, to identify a deficiency, or to flag it before your Posting Deadline.
+
+8. Persistence of Published Content
+
+A Qualifying Post is intended to remain published. You agree not to delete, archive, conceal or otherwise remove a Qualifying Post, and not to render the account from which it was published private or otherwise inaccessible.
+
+No fixed period is specified for this obligation, consistent with customary practice in influencer marketing. Where the Merchant accepts a format that the platform removes automatically after a fixed period, such as a Story, the post must instead remain published for that full period. Removal of a Qualifying Post may result in restriction of your access to Post to Pay under Section 15.
+
+9. Charge Where No Qualifying Post Is Published
+
+If you do not publish a Qualifying Post by your Posting Deadline, the rest of the price of the Covered Products, plus the tax on your order, will be charged to the payment method you used for your order. That amount is shown to you before you place your order, with tax added to it. You keep the products, and shipping stays free.
+
+9.1 Nature of the charge. When you place a Post to Pay order you pay part of the purchase price, and the Deferred Balance remains outstanding. Tax on your order is not collected when you place it. If you publish a Qualifying Post by your Posting Deadline, nothing further is payable: a discount is applied to your order so that its total, including tax, equals the amount you paid when you placed it. If your order is treated as having no Qualifying Post, the Deferred Balance and the tax on your order become immediately due. That amount is the unpaid portion of the purchase price of goods you have received and retain. It is not a penalty, a fee, or liquidated damages.
+
+9.2 Authorization. By completing a Post to Pay order you authorize the Merchant to charge the payment method used for your order for the Deferred Balance stated in your Offer Details, plus the tax on your order, in the event that your order is treated as having no Qualifying Post. Vouch records and reviews your post, and the Merchant may flag it, as set out in Section 7. Based on the outcome, Vouch submits the resulting instruction to the Merchant's store on the Merchant's behalf, either to apply the discount or to collect the Deferred Balance plus the tax on your order. The charge is made in the Merchant's name through its store and paid to the Merchant, and Vouch receives no part of it.
+
+9.3 Unsuccessful charge. Where a charge is declined or otherwise unsuccessful, Vouch or the Merchant may reattempt it. Until paid, the amount remains due and owing to the Merchant, and the Merchant may pursue recovery of it. Vouch does not collect that amount, does not pursue recovery on the Merchant's behalf, and gives no assurance that it will be collected.
+
+9.4 Publication after the Posting Deadline. Publication after the Posting Deadline does not entitle you to reversal of a charge made under this Section. You may submit a request to support@vouch.so and Vouch will forward it to the Merchant, but any reversal is at the Merchant's sole discretion.
+
+9.5 Returns and refunds. Where the Merchant accepts a return and refunds your whole order in accordance with its own policies, your obligation under Section 6 terminates and no charge is made under this Section. Where a Qualifying Post was published before the return, the licence granted under Section 11 is unaffected.
+
+9.6 Disputed determinations. If you believe you published a Qualifying Post by your Posting Deadline, or fixed or replaced a flagged post in time, and a charge has been made or is about to be made under this Section, you may write to support@vouch.so with the link to your post. Vouch will review the post against the requirements that applied to your order. Where Vouch determines that a Qualifying Post was published, fixed or replaced in time, it will notify the Merchant and will not treat the order as having no Qualifying Post, and any charge already made will be refunded by the Merchant.
+
+9.7 Authorization hold. Before your order is shipped, an authorization for the Deferred Balance plus the tax on your order may be placed on the payment method used for your order. An authorization is not a charge. Once the discount described in Section 9.1 is applied to your order, the authorization is released. If your order is treated as having no Qualifying Post, the authorized amount is captured as the charge described in Section 9.1. Authorizations expire under the rules of your card issuer. If the authorization has expired when the charge becomes due, the Deferred Balance plus the tax on your order is charged to the same payment method instead, and Section 9.3 applies if that charge is unsuccessful. The time your card issuer takes to remove a released authorization from your account is outside the control of Vouch and the Merchant.
+
+9.8 If the Merchant stops using Vouch. If the Merchant removes the Vouch application from its store before your order has concluded, no charge is made under this Section for that order and nothing further is payable. Disabling Post to Pay stops new offers; orders already placed continue under these Terms.
+
+10. Order Limits and Availability
+
+Vouch may limit the number of Post to Pay orders you may have open at any one time, and may vary that limit by reference to your history of publishing Qualifying Posts. Any limit applicable to you is displayed before you place an order.
+
+A Merchant may also limit how often you can use Post to Pay at its store.
+
+Post to Pay may be unavailable at a Merchant's store from time to time, including when the Merchant has reached the number of Post to Pay orders it can accept in a month.
+
+11. Content Licence
+
+When you place your order you will be presented with a selection, enabled by default, granting the Merchant rights to use your Qualifying Post. You may disable it.
+
+11.1 No effect on your order. Disabling the selection has no effect on your discount, your Posting Deadline, or any other term of your order.
+
+11.2 Grant. Where the selection is enabled and you publish a Qualifying Post, you grant the Merchant a worldwide, royalty-free, fully paid, perpetual and irrevocable licence to use, reproduce, distribute, publicly display, publicly perform, edit, re-cut, adapt and otherwise modify the Qualifying Post and the photographic and video material contained in it, including by the addition of the Merchant's own branding, and to exploit the foregoing in advertising and promotion of any kind, including paid advertising, advertising served from your handle where you have separately enabled that facility with the applicable platform, the Merchant's websites and email communications, packaging, and retail environments.
+
+11.3 Name and likeness. You further grant the Merchant the right to use your name, social media handle, likeness and voice, as they appear in the Qualifying Post, for the purposes described in Section 11.2.
+
+11.4 Moral rights. To the fullest extent permitted by applicable law, you waive, and agree not to assert, any moral rights or rights of attribution or integrity in the Qualifying Post in respect of the uses described in this Section 11.
+
+11.5 Scope of the grant. The licence granted under this Section extends only to your own contribution. It does not extend to musical works, sound recordings, footage, artwork or other material in which you do not hold the necessary rights, or to the name, likeness or voice of any other person appearing in the Qualifying Post. The Merchant is responsible for obtaining any further rights it requires before exploiting the Qualifying Post.
+
+11.6 Sublicensing. The Merchant may permit its service providers to exercise the rights granted under this Section solely on the Merchant's behalf. The Merchant may not otherwise sublicense, assign or transfer those rights, except to a successor in connection with a merger, acquisition or sale of substantially all of its assets.
+
+11.7 Duration and survival. The licence granted under this Section is perpetual and irrevocable and survives your subsequent removal of the Qualifying Post, termination of your access to Post to Pay under Section 15, and termination of these Terms. Where no Qualifying Post is published, no licence arises under this Section.
+
+11.8 Vouch's licence. Separately, you grant Vouch a worldwide, royalty-free, perpetual and non-exclusive licence to use your Qualifying Post, your handle and your publicly available profile information to operate, monitor and improve Post to Pay, and to reference and display them in Vouch's marketing materials and case studies.
+
+12. Text Messages and Email
+
+12.1 Text messages. By providing a mobile telephone number you consent to receive automated text messages from Vouch concerning your order, your posting window and your Posting Deadline. Message and data rates may apply. You may withdraw this consent at any time by replying STOP to any message. Withdrawal of consent does not alter your Posting Deadline or any other obligation under these Terms, and you remain responsible for publishing a Qualifying Post on time.
+
+12.2 Email. Vouch will send communications concerning your order to the email address you provide.
+
+13. The Products
+
+The Merchant is the seller. All matters concerning shipping, delivery, returns, refunds, exchanges, missing or damaged items, product safety and warranties are between you and the Merchant, and the Merchant's own policies apply to your order on the same basis as they apply to any other customer.
+
+Vouch makes no representation or warranty concerning any Covered Product, its description, its condition, its fitness for any purpose, or its delivery, and accepts no liability in respect of any of them.
+
+14. Prohibited Conduct
+
+In connection with Post to Pay, you shall not:
+
+- Submit or use a social media account that you do not control, or misrepresent the ownership or operation of any account;
+
+- Use purchased followers, engagement groups, automated accounts or any other means of artificially inflating an account's metrics;
+
+- Create multiple accounts, or use another person's information, to circumvent any limit, refusal or restriction;
+
+- Sell, transfer, share or reuse a Post to Pay offer or discount, or obtain the Post to Pay purchase option other than through the offer presented to you;
+
+- Publish content concerning a Covered Product that is false, deceptive or misleading;
+
+- Publish content that is unlawful, defamatory, harassing, hateful, discriminatory, violent or sexually explicit;
+
+- Interfere with, probe, disrupt or attempt to gain unauthorized access to Post to Pay or any system on which it operates.
+
+15. Restriction of Access
+
+Vouch may restrict, suspend or refuse your access to Post to Pay at any time, including permanently, where you breach these Terms or where your conduct indicates misuse of Post to Pay. A restriction may be applied across all merchants that accept Post to Pay, and Vouch may use information associated with your previous orders to identify and prevent further use.
+
+If you consider a restriction to have been applied in error, you may write to support@vouch.so setting out the basis for your position. Vouch reviews the correspondence it receives but is under no obligation to review, reconsider or reverse any restriction.
+
+A restriction does not discharge any amount owed under Section 9 and does not terminate any licence granted under Section 11.
+
+16. Privacy
+
+Vouch's Privacy Policy describes the information collected in connection with Post to Pay, including the profile information evaluated under Section 4, and how that information is used and disclosed.
+
+17. Taxes
+
+Sales tax is calculated by the Merchant's store in accordance with applicable law. It is not collected when you place a Post to Pay order. If your order is treated as having no Qualifying Post, the tax on your whole order is charged together with the Deferred Balance under Section 9. If you publish a Qualifying Post, no tax is payable by you beyond the amount you paid when you placed your order. You are responsible for any taxes arising in respect of you personally as a result of a Post to Pay order.
+
+18. Amendment
+
+Vouch may amend these Terms from time to time. Each Post to Pay order constitutes a separate agreement, and the version of these Terms accepted by you when placing that order governs it. No amendment applies retrospectively to an order already placed.
+
+19. Disclaimer of Warranties
+
+POST TO PAY IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS. TO THE FULLEST EXTENT PERMITTED BY LAW, VOUCH DISCLAIMS ALL WARRANTIES, EXPRESS, IMPLIED OR STATUTORY, INCLUDING IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. VOUCH DOES NOT WARRANT THAT POST TO PAY WILL BE UNINTERRUPTED OR ERROR-FREE, THAT ANY REMINDER WILL BE DELIVERED, OR THAT ANY DETERMINATION MADE UNDER SECTION 6 OR SECTION 7 WILL BE ACCURATE IN EVERY CASE.
+
+Vouch makes no representation concerning the performance or reception of any post, and no representation that Post to Pay will be offered by any merchant, or offered to you, on any future occasion.
+
+Some jurisdictions do not permit the exclusion of certain warranties, and the foregoing exclusions may not apply to you in full.
+
+20. Limitation of Liability
+
+TO THE FULLEST EXTENT PERMITTED BY LAW, VOUCH AND ITS OFFICERS, DIRECTORS, EMPLOYEES, AGENTS AND AFFILIATES SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY OR PUNITIVE DAMAGES, OR FOR ANY LOSS OF PROFITS, REVENUE, DATA, GOODWILL OR BUSINESS OPPORTUNITY, ARISING OUT OF OR RELATING TO POST TO PAY OR THESE TERMS, WHETHER OR NOT VOUCH HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+VOUCH'S TOTAL AGGREGATE LIABILITY ARISING OUT OF OR RELATING TO THESE TERMS OR ANY POST TO PAY ORDER SHALL NOT EXCEED THE GREATER OF ONE HUNDRED U.S. DOLLARS (US$100) AND THE TOTAL AMOUNT PAID BY YOU IN RESPECT OF THE ORDER TO WHICH THE CLAIM RELATES.
+
+These limitations apply regardless of the theory of liability and notwithstanding the failure of any limited remedy of its essential purpose. Nothing in these Terms limits liability for fraud or fraudulent misrepresentation, for death or personal injury caused by negligence, or for any other liability that cannot be limited under applicable law. Some jurisdictions do not permit certain limitations, and the foregoing may not apply to you in full.
+
+21. Indemnification
+
+You agree to defend, indemnify and hold harmless Vouch and its officers, directors, employees, agents and affiliates from and against any claim, liability, damage, loss, cost or expense, including reasonable attorneys' fees, arising out of or relating to: (a) any post you publish; (b) your breach of these Terms; (c) your violation of any applicable law or the rights of any third party; or (d) any allegation that material contained in a post you publish infringes or misappropriates the rights of any person.
+
+22. Dispute Resolution; Arbitration; Class Action Waiver
+
+Please read this section carefully. It affects your legal rights.
+
+22.1 Informal resolution. Before commencing any formal proceeding, you and Vouch each agree to attempt to resolve the dispute informally. You shall send written notice to support@vouch.so describing the dispute and the relief sought, and Vouch shall send the equivalent notice to the email address you provided. The receiving party will attempt in good faith to resolve the dispute within 30 days. Any applicable limitation period is tolled while this process is underway.
+
+22.2 Binding arbitration. Any dispute, claim or controversy arising out of or relating to these Terms or your use of Post to Pay that is not resolved informally shall be resolved by binding individual arbitration administered by JAMS, and not in court. Because Post to Pay is used for personal, family or household purposes, the arbitration shall be administered under the JAMS Streamlined Arbitration Rules and Procedures together with the JAMS Consumer Arbitration Minimum Standards, which govern in the event of any conflict with these Terms. The arbitration shall be conducted remotely or, at your election, in the county in which you reside. You shall not be required to pay more than the filing fee applicable in your local court, and Vouch shall pay all remaining arbitration fees. You may elect to have the arbitration conducted by telephone, by videoconference or on written submissions. Judgment on the award may be entered in any court of competent jurisdiction.
+
+22.3 Class action waiver. YOU AND VOUCH AGREE THAT EACH MAY BRING CLAIMS AGAINST THE OTHER ONLY IN AN INDIVIDUAL CAPACITY, AND NOT AS A PLAINTIFF OR CLASS MEMBER IN ANY PURPORTED CLASS, COLLECTIVE OR REPRESENTATIVE PROCEEDING. The arbitrator may not consolidate more than one person's claims and may not preside over any form of representative or class proceeding. If this Section 22.3 is held unenforceable as to a particular claim, that claim shall be severed from the arbitration and may proceed in court, and the remaining claims shall continue in arbitration.
+
+22.4 Exceptions. Either party may bring an individual action in small claims court for a dispute within that court's jurisdiction. Either party may also seek injunctive or other equitable relief in a court of competent jurisdiction to protect intellectual property rights.
+
+22.5 Opt-out. You may opt out of Sections 22.2 and 22.3 by sending written notice to support@vouch.so within 30 days after the date on which you first accept these Terms. Your notice must state your name, the email address you used, and a clear statement that you wish to opt out. An opt-out applies to every Post to Pay order you place, whether before or after the notice. Opting out does not affect any other provision of these Terms and does not affect your eligibility to use Post to Pay.
+
+If Vouch makes a material change to this Section 22 after you have accepted these Terms, you may opt out of the changed version by sending the same notice within 30 days after the change takes effect.
+
+23. Governing Law and Venue
+
+These Terms are governed by the laws of the State of Delaware, without regard to its conflict of laws principles. For any matter not subject to arbitration, you and Vouch submit to the exclusive jurisdiction and venue of the state and federal courts located in Wilmington, Delaware. Nothing in this Section deprives you of the protection of any mandatory consumer protection law of the jurisdiction in which you reside.
+
+24. General
+
+Entire agreement. These Terms, together with your Offer Details, constitute the entire agreement between you and Vouch in respect of your Post to Pay order and supersede any prior understanding on that subject. Your purchase of the Covered Products is separately governed by the Merchant's own terms of sale.
+
+Order of precedence. In the event of a conflict between these Terms and the Merchant's terms of sale, these Terms govern your posting obligation, the content licence and the charge under Section 9, and the Merchant's terms govern the sale, fulfillment and return of the Covered Products.
+
+Severability. If any provision of these Terms is held invalid or unenforceable, the remaining provisions remain in full force and effect, and that provision shall be modified to the minimum extent necessary to render it enforceable.
+
+No waiver. No failure or delay by Vouch in enforcing any provision operates as a waiver of that provision or of any other.
+
+Assignment. You may not assign or transfer these Terms or any rights under them. Vouch may assign these Terms freely, including in connection with a merger, acquisition, financing or sale of assets.
+
+No agency or employment. Nothing in these Terms creates any employment, agency, partnership or joint venture relationship between you and Vouch or between you and any Merchant. You act as an independent party and determine the content you publish.
+
+Notices. Vouch may give notice to you by text message, by email, or by display when you place an order. You may give notice to Vouch at support@vouch.so or at the address stated in Section 25.
+
+Headings. Section headings are for convenience only and have no legal effect.
+
+Survival. Sections 9, 11, 13, 15, 16, 17, and 19 through 24 survive completion or termination of your order.
+
+25. Contact
+
+Vouch Commerce, Inc.
+131 Continental Drive, Suite 305
+Newark, Delaware 19713
+Email: support@vouch.so

@@ -1,32 +1,30 @@
-export const POST_TO_PAY_MIN_FOLLOWERS = 2_500;
-export const POST_TO_PAY_FULL_DISCOUNT_FOLLOWERS = 10_000;
-export const POST_TO_PAY_BASE_DISCOUNT = 10;
+// Demo discount curve (Henry, November 2, 2026): deliberately more generous than any live brand.
+// Everyone gets at least 25% off; from 1,000 followers the discount rises linearly to 100% off
+// at 2,500 followers, rounded to the nearest 5%.
+export const DEMO_FLOOR_PERCENT = 25;
+export const DEMO_RAMP_START_FOLLOWERS = 1_000;
+export const DEMO_FULL_DISCOUNT_FOLLOWERS = 2_500;
 
-export interface PostToPayQuote {
-  discountPercent: number;
-  savings: number;
-  amountDue: number;
+export function demoDiscountPercent(followers: number): number {
+  if (!Number.isFinite(followers)) return DEMO_FLOOR_PERCENT;
+  const progress = Math.min(1, Math.max(0,
+    (followers - DEMO_RAMP_START_FOLLOWERS) / (DEMO_FULL_DISCOUNT_FOLLOWERS - DEMO_RAMP_START_FOLLOWERS),
+  ));
+  const percent = DEMO_FLOOR_PERCENT + (100 - DEMO_FLOOR_PERCENT) * progress;
+  return Math.round(percent / 5) * 5;
 }
 
-/** Eligibility is checked separately. Accounts below the follower minimum receive no discount. */
-export function calculatePostToPayQuote(
-  followers: number,
-  orderTotal: number,
-  isEligible: boolean,
-): PostToPayQuote {
-  const progress = Math.min(1, Math.max(0,
-    (followers - POST_TO_PAY_MIN_FOLLOWERS) /
-    (POST_TO_PAY_FULL_DISCOUNT_FOLLOWERS - POST_TO_PAY_MIN_FOLLOWERS),
-  ));
-  const discountPercent = isEligible && Number.isFinite(followers) && followers >= POST_TO_PAY_MIN_FOLLOWERS
-    ? POST_TO_PAY_BASE_DISCOUNT + (100 - POST_TO_PAY_BASE_DISCOUNT) * progress
-    : 0;
-  // Round only the money, so the underlying discount scales linearly.
-  const totalCents = Math.round(orderTotal * 100);
-  const savingsCents = Math.round(totalCents * discountPercent / 100);
-  return {
-    discountPercent,
-    savings: savingsCents / 100,
-    amountDue: (totalCents - savingsCents) / 100,
-  };
+export interface PostToPayQuote {
+  percent: number;
+  priceCents: number;
+  /** The discount the shopper keeps by posting. */
+  balanceCents: number;
+  /** What the shopper pays today. */
+  depositCents: number;
+}
+
+export function quote(followers: number, priceCents: number): PostToPayQuote {
+  const percent = demoDiscountPercent(followers);
+  const balanceCents = Math.round(priceCents * percent / 100);
+  return { percent, priceCents, balanceCents, depositCents: priceCents - balanceCents };
 }
