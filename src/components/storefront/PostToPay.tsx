@@ -151,7 +151,7 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
       <strong>Demo only:</strong>{' '}
       {placement === 'checkout'
         ? 'in the live product, the shopper enters their card in the payment form below to place the order. The demo ends here.'
-        : 'in the live product, Check out opens Shopify checkout, where the shopper enters their card and places the order. The demo ends here.'}
+        : 'in the live product, “Check out” opens checkout, where the shopper enters their card and places the order. The demo ends here.'}
     </p>
   );
 
