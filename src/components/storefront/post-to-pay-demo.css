@@ -19,7 +19,7 @@
 .vouch-proof__demo-note { margin-top: 16px !important; padding: 10px 12px; border-radius: 6px; background: #fdf8c9; box-shadow: 0 0 0 1px #f5df8f; color: #6b3a00; font-size: 13px; line-height: 18px; }
 .vouch-proof__demo-note strong { font-weight: 600; }
 
-/* Ambassador code (roadmap): one compact line, identical on the qualify step and the confirmation. */
+/* Ambassador code (roadmap): one compact line on the qualify step. */
 .vouch-proof__ambassador { position: relative; display: flex; align-items: center; gap: 6px; margin-top: 8px; padding: 6px 6px 6px 12px; border-radius: 6px; box-shadow: var(--vouch-edge); color: var(--vouch-body); font-size: 13px; line-height: 18px; }
 .vouch-proof__ambassador > svg { color: var(--vouch-accent); }
 .vouch-proof__ambassador > span { min-width: 0; overflow-wrap: anywhere; }

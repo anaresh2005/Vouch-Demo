@@ -15,7 +15,7 @@ import './post-to-pay-demo.css';
 // unchanged. Demo differences (roadmap mocks): more platforms, cart and checkout placements, ambassador codes;
 // the discount follows the demo curve, and the account scan is the only live call. Checkout is simulated.
 
-type Step = 'platform' | 'username' | 'approval' | 'offer' | 'added' | 'confirmation';
+type Step = 'platform' | 'username' | 'approval' | 'offer' | 'added';
 const PROGRESS: Step[] = ['platform', 'username', 'approval', 'offer'];
 
 // Every platform on the roadmap. Only Instagram and TikTok are scanned (through Modash); the others
@@ -119,26 +119,11 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
     }
   };
 
+  // Only the product page adds to the cart here; the cart and checkout pages end at the Shopify hand-off.
   const accept = (event: FormEvent) => {
     event.preventDefault();
-    if (wholeOrder) {
-      setAddedCount(1);
-      go('confirmation');
-    } else {
-      setAddedCount((count) => count + 1);
-      go('added');
-    }
-  };
-
-  const reset = () => {
-    setOpen(false);
-    setStep('platform');
-    setAccount(null);
-    setUsername('');
-    setAddedCount(0);
-    setCode(null);
-    setCopied(false);
-    setError('');
+    setAddedCount((count) => count + 1);
+    go('added');
   };
 
   const copyCode = async () => {
@@ -159,19 +144,19 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
   }[placement];
   const createCode = () => account && setCode(affiliateCode(account.username));
 
-  // Where the live product hands off to Shopify checkout for the card (Aneesh's review, November 3):
-  // say so, then skip ahead to the confirmation.
+  // The demo ends where the live product hands off to Shopify checkout for the card (Aneesh's review and
+  // Henry, November 3): the button stays in view but can't be clicked, and this note says why.
   const handoffNote = (
     <p className="vouch-proof__demo-note" role="note">
       <strong>Demo only:</strong>{' '}
       {placement === 'checkout'
-        ? 'in the live product, the shopper enters their card in the payment form below. The demo skips ahead to the order confirmation.'
-        : 'in the live product, Check out opens Shopify checkout, where the shopper enters their card. The demo skips ahead to the order confirmation.'}
+        ? 'in the live product, the shopper enters their card in the payment form below to place the order. The demo ends here.'
+        : 'in the live product, Check out opens Shopify checkout, where the shopper enters their card and places the order. The demo ends here.'}
     </p>
   );
 
-  // Ambassador code (roadmap): one compact, optional line, identical on "You qualify!" and the order
-  // confirmation. The info tip explains the terms (shown on hover or tap, like the block's key terms).
+  // Ambassador code (roadmap): one compact, optional line on "You qualify!". The info tip explains the
+  // terms (shown on hover or tap, like the block's key terms).
   const ambassador = (
     <div className="vouch-proof__ambassador">
       <PercentIcon size={16} />
@@ -179,9 +164,9 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
         {code ? <>Code <strong>{code}</strong> · emailed to you</> : <strong>Earn {AFFILIATE_PERCENT}% commission</strong>}
       </span>
       <details className="vouch-proof__info">
-        <summary aria-label="About ambassador codes" aria-controls={`vouch-ambassador-${step}`}><InfoIcon /></summary>
+        <summary aria-label="About ambassador codes" aria-controls="vouch-ambassador"><InfoIcon /></summary>
       </details>
-      <div className="vouch-proof__ambassador-tip" id={`vouch-ambassador-${step}`} role="note">
+      <div className="vouch-proof__ambassador-tip" id="vouch-ambassador" role="note">
         <strong>Become a {demoStore.name} ambassador</strong>
         Anyone who uses your code gets {AFFILIATE_PERCENT}% off, and you earn {AFFILIATE_PERCENT}% of the resulting sales. We’ll email you your code.
       </div>
@@ -194,8 +179,6 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
       className={placement === 'checkout' ? 'vouch-proof vouch-proof--express' : 'vouch-proof'}
       data-platform={platform}
       data-free-shipping={demoStore.freeExpressShipping ? '' : undefined}
-      data-state={step === 'confirmation' ? 'confirmed' : undefined}
-      data-order={step === 'confirmation' ? '' : undefined}
     >
       <button
         type="button"
@@ -365,7 +348,7 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
                   {wholeOrder && handoffNote}
                   <div className="vouch-proof__actions">
                     <button type="button" className="vouch-proof__secondary" onClick={() => go('approval')}>← Back</button>
-                    <button type="submit" className="vouch-proof__primary">{{ product: 'Add to cart', cart: 'Check out', checkout: 'Continue to payment' }[placement]}</button>
+                    <button type="submit" className="vouch-proof__primary" disabled={wholeOrder}>{{ product: 'Add to cart', cart: 'Check out', checkout: 'Continue to payment' }[placement]}</button>
                   </div>
                 </form>
               </div>
@@ -382,28 +365,7 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
                 {handoffNote}
                 <div className="vouch-proof__actions">
                   <button type="button" className="vouch-proof__secondary" onClick={() => setOpen(false)}>Keep shopping</button>
-                  <button type="button" className="vouch-proof__primary" onClick={() => go('confirmation')}>Check out</button>
-                </div>
-              </div>
-            )}
-
-            {step === 'confirmation' && added && (
-              <div data-step="confirmation">
-                <div className="vouch-proof__heading">
-                  <span className="vouch-proof__status-icon" aria-hidden="true" />
-                  <div><h3 tabIndex={-1} ref={heading}>Payment confirmed</h3><p>Order #1001</p></div>
-                </div>
-                <dl className="vouch-proof__deal vouch-proof__if-order">
-                  <div><dt>Paid today</dt><dd>{money(added.depositCents)}</dd></div>
-                  <div><dt>Charged if you don’t post</dt><dd>{money(added.balanceCents)} + tax</dd></div>
-                </dl>
-                <p className="vouch-proof__condition vouch-proof__if-pending-post">
-                  Post within <strong>{demoStore.postingWindowDays} days of delivery</strong> and tag <strong className="vouch-proof__handle">{handle}</strong> to keep your {money(added.balanceCents)} discount. We’ll email you how and when to post.
-                </p>
-                {ambassador}
-                <details className="vouch-proof__terms"><summary>Your accepted agreement</summary><p>{terms}</p></details>
-                <div className="vouch-proof__actions">
-                  <button type="button" className="vouch-proof__primary" onClick={reset}>Done</button>
+                  <button type="button" className="vouch-proof__primary" disabled>Check out</button>
                 </div>
               </div>
             )}
