@@ -21,6 +21,9 @@ Roadmap features mocked in the demo:
 - **Cart and checkout placements.** The demo switches between the product, cart and checkout pages.
   On the cart and checkout pages the offer covers the whole order. At checkout, Post to Pay is one of
   the express tiles (with mock Shop Pay, PayPal and G Pay), above a disabled card form.
+- **Checkout hand-off.** Where the live product sends the shopper to Shopify checkout to enter their card
+  (Check out, or Continue to payment at checkout), a "Demo only" note says so; the demo then skips ahead
+  to the order confirmation.
 - **Ambassador codes.** Shoppers get a personal code (their followers get 10% off; they earn 10% of
   each order), and it's emailed to them. One compact, optional line ("Earn 10% commission", with an
   info tip) appears identically on the "You qualify!" step and the order confirmation.

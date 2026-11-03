@@ -159,6 +159,17 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
   }[placement];
   const createCode = () => account && setCode(affiliateCode(account.username));
 
+  // Where the live product hands off to Shopify checkout for the card (Aneesh's review, November 3):
+  // say so, then skip ahead to the confirmation.
+  const handoffNote = (
+    <p className="vouch-proof__demo-note" role="note">
+      <strong>Demo only:</strong>{' '}
+      {placement === 'checkout'
+        ? 'in the live product, the shopper enters their card in the payment form below. The demo skips ahead to the order confirmation.'
+        : 'in the live product, Check out opens Shopify checkout, where the shopper enters their card. The demo skips ahead to the order confirmation.'}
+    </p>
+  );
+
   // Ambassador code (roadmap): one compact, optional line, identical on "You qualify!" and the order
   // confirmation. The info tip explains the terms (shown on hover or tap, like the block's key terms).
   const ambassador = (
@@ -351,9 +362,10 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
                     <input type="checkbox" name="contentRights" defaultChecked />
                     <span>I grant {demoStore.name} the rights to publish and promote the content I create for this order.</span>
                   </label>
+                  {wholeOrder && handoffNote}
                   <div className="vouch-proof__actions">
                     <button type="button" className="vouch-proof__secondary" onClick={() => go('approval')}>← Back</button>
-                    <button type="submit" className="vouch-proof__primary">{{ product: 'Add to cart', cart: 'Check out', checkout: 'Pay now' }[placement]}</button>
+                    <button type="submit" className="vouch-proof__primary">{{ product: 'Add to cart', cart: 'Check out', checkout: 'Continue to payment' }[placement]}</button>
                   </div>
                 </form>
               </div>
@@ -367,6 +379,7 @@ export function PostToPay({ placement, summary, priceCents }: Props) {
                 </div>
                 <Deal quote={added} items={addedCount} />
                 <p className="vouch-proof__explanation">Other items are full price.</p>
+                {handoffNote}
                 <div className="vouch-proof__actions">
                   <button type="button" className="vouch-proof__secondary" onClick={() => setOpen(false)}>Keep shopping</button>
                   <button type="button" className="vouch-proof__primary" onClick={() => go('confirmation')}>Check out</button>
