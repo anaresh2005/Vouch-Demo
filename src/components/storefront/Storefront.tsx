@@ -98,7 +98,6 @@ function ProductPage() {
 
         <PostToPay
           placement="product"
-          summary={`${demoProduct.title} · ${variant.name} · Quantity 1`}
           priceCents={demoProduct.priceCents}
         />
 
@@ -138,7 +137,7 @@ function CartPage() {
           </div>
           <p className="mt-1 text-xs text-[#121212]/60">Taxes, discounts and shipping calculated at checkout.</p>
           <button type="button" className={cn(BUTTON, 'mt-5 bg-[#121212] text-white')}>Check out</button>
-          <PostToPay placement="cart" summary={`${CART.length} items in your cart`} priceCents={subtotal} />
+          <PostToPay placement="cart" priceCents={subtotal} />
         </div>
       </div>
     </main>
@@ -190,7 +189,7 @@ function CheckoutPage() {
             <button type="button" className={cn(BUTTON, 'bg-[#5a31f4] text-white')}>Shop Pay</button>
             <button type="button" className={cn(BUTTON, 'bg-[#ffc439] text-[#003087]')}>PayPal</button>
             <button type="button" className={cn(BUTTON, 'bg-black text-white')}>G Pay</button>
-            <PostToPay placement="checkout" summary={`${CART.length} items in your order`} priceCents={subtotal} />
+            <PostToPay placement="checkout" priceCents={subtotal} />
           </div>
 
           <div className="my-6 flex items-center gap-3 text-xs uppercase text-[#121212]/50" aria-hidden="true">

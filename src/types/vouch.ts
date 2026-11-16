@@ -1,4 +1,4 @@
-export type SocialPlatform = 'instagram' | 'tiktok' | 'snapchat' | 'substack' | 'x' | 'linkedin';
+export type SocialPlatform = 'instagram' | 'tiktok' | 'snapchat' | 'youtube' | 'x' | 'facebook' | 'pinterest' | 'linkedin' | 'substack';
 /** Platforms the demo can scan through Modash. */
 export type ScannedPlatform = Extract<SocialPlatform, 'instagram' | 'tiktok'>;
 

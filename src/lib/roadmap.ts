@@ -29,7 +29,7 @@ export const ROADMAP: RoadmapPhase[] = [
     title: 'By the end of 2026',
     live: false,
     items: [
-      { title: 'More platforms', description: 'TikTok, Snapchat, Substack, X and LinkedIn alongside Instagram.', inDemo: true },
+      { title: 'More platforms', description: 'TikTok, Snapchat, YouTube, X, Facebook, Pinterest, LinkedIn and Substack alongside Instagram.', inDemo: true },
       { title: 'Ambassador codes', description: 'Shoppers get their own code: their followers get a discount and they earn a share of each order.', inDemo: true },
     ],
   },

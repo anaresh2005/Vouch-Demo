@@ -10,6 +10,8 @@ export const demoStore = {
   /** Days after delivery to post, as in the merchant's Vouch settings. */
   postingWindowDays: 3,
   freeExpressShipping: true,
+  /** The express rate the store waives on Post to Pay orders, shown on "You're in". */
+  expressShippingCents: 2800,
 };
 
 export interface Variant {
