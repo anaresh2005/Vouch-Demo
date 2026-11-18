@@ -5,10 +5,9 @@ import { cn } from '@/lib/utils';
 import { COLLECTIONS, demoStore, findProduct, money, PRODUCTS, type Collection, type Product } from '@/lib/demoStore';
 import { useVouchSettings } from '@/lib/demoSettings';
 import { useCart } from '@/lib/storeState';
-import bottleSand from '@/assets/bottle-sand.jpg';
-import bottleSage from '@/assets/bottle-sage.jpg';
-import bottleSlate from '@/assets/bottle-slate.jpg';
 import { PostToPay } from './PostToPay';
+
+const [bottleSlate, bottleSand, bottleSage] = PRODUCTS[0].variants.map((variant) => variant.image);
 import { ProductArt } from './ProductArt';
 import { VouchLine } from './Callouts';
 import { useStorePath } from './Storefront';

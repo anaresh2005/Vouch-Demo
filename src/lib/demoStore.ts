@@ -1,10 +1,9 @@
-import bottleSlate from '@/assets/bottle-slate.jpg';
-import bottleSand from '@/assets/bottle-sand.jpg';
-import bottleSage from '@/assets/bottle-sage.jpg';
+// Product images: 3D renders made in code with three.js for the demo (November 2026), one per color,
+// all in the same studio setup so they match. scripts/product-renders/ has the renderer.
+const images = import.meta.glob<string>('../assets/products/*.jpg', { eager: true, import: 'default' });
+const image = (name: string) => images[`../assets/products/${name}.jpg`];
 
-// A fictional merchant for the demo. Everything here is made up: the brand, its story and its
-// products. The bottle renders were generated for the demo (November 2026); the other products are
-// drawn in code (see ProductArt).
+// A fictional merchant for the demo. Everything here is made up: the brand, its story and its products.
 export const demoStore = {
   name: 'Harbor & Pine',
   /** The brand's handle, the same on every platform. */
@@ -25,15 +24,11 @@ export const COLLECTIONS: Record<Collection, { title: string; blurb: string }> =
   accessories: { title: 'Accessories', blurb: 'Lids, slings and spares that fit every Harbor & Pine bottle.' },
 };
 
-/** How a product without a photo is drawn. */
-export type ArtKind = 'lid' | 'sling' | 'straw' | 'tumbler' | 'brush';
-
 export interface Variant {
   id: string;
   name: string;
   swatch: string;
-  /** A photo, or none for products drawn in code. */
-  image?: string;
+  image: string;
 }
 
 export interface Product {
@@ -45,7 +40,6 @@ export interface Product {
   description: string;
   details: string[];
   variants: Variant[];
-  art?: ArtKind;
   badge?: string;
 }
 
@@ -61,9 +55,9 @@ export const PRODUCTS: Product[] = [
       'Double-walled stainless steel keeps drinks cold for 24 hours or hot for 12. A powder-coated finish that won’t sweat, and a leakproof steel cap.',
     details: ['20 oz (590 ml)', '18/8 stainless steel, BPA-free', 'Fits most cup holders', 'Hand wash recommended'],
     variants: [
-      { id: 'slate', name: 'Slate', image: bottleSlate, swatch: '#6f8396' },
-      { id: 'sand', name: 'Sand', image: bottleSand, swatch: '#d9cbb5' },
-      { id: 'sage', name: 'Sage', image: bottleSage, swatch: '#a9b8a2' },
+      { id: 'slate', name: 'Slate', image: image('bottle-slate'), swatch: '#6f8396' },
+      { id: 'sand', name: 'Sand', image: image('bottle-sand'), swatch: '#d9cbb5' },
+      { id: 'sage', name: 'Sage', image: image('bottle-sage'), swatch: '#a9b8a2' },
     ],
   },
   {
@@ -76,11 +70,10 @@ export const PRODUCTS: Product[] = [
     description:
       'For the commute and the coffee line. A tapered tumbler that fits under most espresso machines, with a sliding lid that locks shut.',
     details: ['16 oz (470 ml)', 'Hot for 6 hours, cold for 18', 'Splash-proof sliding lid', 'Dishwasher-safe lid'],
-    art: 'tumbler',
     variants: [
-      { id: 'sand', name: 'Sand', swatch: '#d9cbb5' },
-      { id: 'slate', name: 'Slate', swatch: '#6f8396' },
-      { id: 'pine', name: 'Pine', swatch: '#3f5a4c' },
+      { id: 'sand', name: 'Sand', swatch: '#d9cbb5', image: image('tumbler-sand') },
+      { id: 'slate', name: 'Slate', swatch: '#6f8396', image: image('tumbler-slate') },
+      { id: 'pine', name: 'Pine', swatch: '#3f5a4c', image: image('tumbler-pine') },
     ],
   },
   {
@@ -92,10 +85,9 @@ export const PRODUCTS: Product[] = [
     description:
       'Swap the steel cap for an insulated one with a soft-touch loop that hooks onto a bag or a finger. Fits every Harbor & Pine bottle.',
     details: ['Fits all Harbor & Pine bottles', 'Leakproof silicone seal', 'Dishwasher safe'],
-    art: 'lid',
     variants: [
-      { id: 'steel', name: 'Steel', swatch: '#b8bec6' },
-      { id: 'black', name: 'Black', swatch: '#2b2f33' },
+      { id: 'steel', name: 'Steel', swatch: '#b8bec6', image: image('lid-steel') },
+      { id: 'black', name: 'Black', swatch: '#2b2f33', image: image('lid-black') },
     ],
   },
   {
@@ -107,10 +99,9 @@ export const PRODUCTS: Product[] = [
     description:
       'A padded sleeve and a cross-body strap, so your bottle comes along on long walks without taking up a hand. Made from recycled polyester webbing.',
     details: ['Fits 16–24 oz bottles', 'Adjustable 30–52 in strap', '100% recycled polyester'],
-    art: 'sling',
     variants: [
-      { id: 'sand', name: 'Sand', swatch: '#d9cbb5' },
-      { id: 'slate', name: 'Slate', swatch: '#6f8396' },
+      { id: 'sand', name: 'Sand', swatch: '#d9cbb5', image: image('sling-sand') },
+      { id: 'slate', name: 'Slate', swatch: '#6f8396', image: image('sling-slate') },
     ],
   },
   {
@@ -122,8 +113,7 @@ export const PRODUCTS: Product[] = [
     description:
       'A flip-up straw for one-handed sipping at the desk or on the trail. The straw folds flat and seals when it’s down.',
     details: ['Fits all Harbor & Pine bottles', 'Two replacement straws included', 'Dishwasher safe'],
-    art: 'straw',
-    variants: [{ id: 'sage', name: 'Sage', swatch: '#a9b8a2' }],
+    variants: [{ id: 'sage', name: 'Sage', swatch: '#a9b8a2', image: image('straw-sage') }],
   },
   {
     handle: 'bottle-brush-kit',
@@ -134,8 +124,7 @@ export const PRODUCTS: Product[] = [
     description:
       'A long bottle brush, a cap brush and a straw cleaner, with plant-based bristles and beechwood handles.',
     details: ['Beechwood handles', 'Plant-based bristles', 'Hangs to dry'],
-    art: 'brush',
-    variants: [{ id: 'natural', name: 'Natural', swatch: '#c9a97c' }],
+    variants: [{ id: 'natural', name: 'Natural', swatch: '#c9a97c', image: image('brush-natural') }],
   },
 ];
 

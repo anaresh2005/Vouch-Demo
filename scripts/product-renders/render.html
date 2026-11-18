@@ -1,0 +1,254 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Product renderer</title>
+<style>body{margin:0;background:#ddd;font:12px sans-serif}canvas{width:360px;height:360px;display:block}</style>
+<script type="importmap">{ "imports": { "three": "/node_modules/three/build/three.module.js", "three/addons/": "/node_modules/three/examples/jsm/" } }</script>
+</head>
+<body>
+<div id="status">loading</div>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const SIZE = 1440;
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1);
+renderer.setSize(SIZE, SIZE);
+renderer.shadowMap.enabled = false;
+renderer.shadowMap.type = THREE.VSMShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 0.72;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+const pmrem = new THREE.PMREMGenerator(renderer);
+const envMap = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+// Backdrop like the bottle photos: near-white blue-gray, a touch darker toward the floor.
+function backdrop() {
+  const c = document.createElement('canvas'); c.width = 4; c.height = 512;
+  const g = c.getContext('2d'); const grad = g.createLinearGradient(0, 0, 0, 512);
+  grad.addColorStop(0, '#f6fafd'); grad.addColorStop(0.7, '#f3f7fa'); grad.addColorStop(1, '#eceff4');
+  g.fillStyle = grad; g.fillRect(0, 0, 4, 512);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+const BACKDROP = backdrop();
+const SHADOW = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const g = c.getContext('2d'); const grad = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+  grad.addColorStop(0, 'rgba(40,52,70,0.55)'); grad.addColorStop(0.45, 'rgba(40,52,70,0.28)'); grad.addColorStop(1, 'rgba(40,52,70,0)');
+  g.fillStyle = grad; g.fillRect(0, 0, 256, 256); return new THREE.CanvasTexture(c);
+})();
+
+// ---- materials
+const powder = (hex) => new THREE.MeshPhysicalMaterial({ color: hex, roughness: 0.68, metalness: 0, clearcoat: 0.08, clearcoatRoughness: 0.6, envMapIntensity: 0.45 });
+const steel = () => new THREE.MeshPhysicalMaterial({ color: '#dfe3e7', metalness: 1, roughness: 0.26, envMapIntensity: 1.1 });
+const brushedSteel = () => new THREE.MeshPhysicalMaterial({ color: '#cfd3d8', metalness: 1, roughness: 0.38, envMapIntensity: 1.0 });
+const fabric = (hex) => new THREE.MeshPhysicalMaterial({ color: hex, roughness: 0.95, sheen: 0.5, sheenRoughness: 0.9, sheenColor: new THREE.Color(hex).lerp(new THREE.Color('#ffffff'), 0.2), envMapIntensity: 0.3 });
+const plastic = (hex) => new THREE.MeshPhysicalMaterial({ color: hex, roughness: 0.5, envMapIntensity: 0.6 });
+const wood = () => new THREE.MeshPhysicalMaterial({ color: '#d8b98f', roughness: 0.55, clearcoat: 0.2, clearcoatRoughness: 0.5, envMapIntensity: 0.5 });
+
+// ---- geometry helpers
+// Smooth lathe from [radius, y] control points.
+function lathe(points, segments = 160, divisions = 220) {
+  const curve = new THREE.SplineCurve(points.map(([x, y]) => new THREE.Vector2(x, y)));
+  const pts = curve.getSpacedPoints(divisions).map((p) => new THREE.Vector2(Math.max(0, p.x), p.y));
+  return new THREE.LatheGeometry(pts, segments);
+}
+const mesh = (geo, mat) => { const m = new THREE.Mesh(geo, mat); m.castShadow = true; m.receiveShadow = true; return m; };
+function roundedCylinder(r, h, bevel, y0 = 0) {
+  return lathe([[0, y0], [r - bevel, y0], [r - bevel * 0.3, y0 + bevel * 0.3], [r, y0 + bevel], [r, y0 + h - bevel], [r - bevel * 0.3, y0 + h - bevel * 0.3], [r - bevel, y0 + h], [0, y0 + h]]);
+}
+
+// ---- products (centimeters)
+function everydayBottle(color) {
+  const g = new THREE.Group();
+  const body = lathe([[0, 0], [3.55, 0], [3.95, 0.2], [4.05, 0.7], [4.05, 4], [4.05, 12.5], [4.0, 15.4], [3.72, 17.6], [3.15, 19.4], [2.78, 20.5], [2.68, 21.2], [2.66, 22.0], [0, 22.0]]);
+  g.add(mesh(body, powder(color)));
+  // The base seam the photos show: a hairline ring just above the bottom.
+  const seam = new THREE.Mesh(new THREE.TorusGeometry(4.055, 0.03, 8, 160), powder(new THREE.Color(color).multiplyScalar(0.82)));
+  seam.rotation.x = Math.PI / 2; seam.position.y = 1.15; g.add(seam);
+  const cap = roundedCylinder(2.72, 2.5, 0.2, 21.8);
+  g.add(mesh(cap, steel()));
+  return g;
+}
+
+function travelTumbler(color) {
+  const g = new THREE.Group();
+  const body = lathe([[0, 0], [2.95, 0], [3.2, 0.15], [3.28, 0.5], [3.5, 4], [3.95, 10], [4.25, 14.4], [4.3, 15], [0, 15]]);
+  g.add(mesh(body, powder(color)));
+  const rim = lathe([[4.3, 14.9], [4.36, 15.0], [4.36, 15.9], [4.3, 16.0], [0, 16.0]]);
+  g.add(mesh(rim, brushedSteel()));
+  const lid = lathe([[0, 15.9], [4.42, 15.9], [4.5, 16.1], [4.5, 16.7], [4.3, 17.0], [3.4, 17.15], [0, 17.2]]);
+  g.add(mesh(lid, plastic('#2c3036')));
+  const slider = mesh(new THREE.BoxGeometry(1.8, 0.35, 1.2), plastic('#1d2024'));
+  slider.position.set(0, 17.25, 2.2); g.add(slider);
+  const opening = mesh(new THREE.BoxGeometry(1.6, 0.1, 0.9), new THREE.MeshStandardMaterial({ color: '#0d0f12', roughness: 0.8 }));
+  opening.position.set(0, 17.18, 3.3); g.add(opening);
+  return g;
+}
+
+function insulatedLid(color, metal) {
+  const g = new THREE.Group();
+  const mat = metal ? steel() : powder(color);
+  g.add(mesh(lathe([[0, 0], [2.18, 0], [2.2, 0.9], [0, 0.9]]), plastic('#9aa1a9')));
+  g.add(mesh(roundedCylinder(2.55, 3.6, 0.3, 0.8), mat));
+  // Carry loop: a flattened arch standing on the top.
+  const arc = new THREE.EllipseCurve(0, 0, 1.55, 1.9, 0, Math.PI, false);
+  const path = new THREE.CurvePath();
+  const pts3 = arc.getPoints(64).map((p) => new THREE.Vector3(p.x, p.y + 4.2, 0));
+  const loopCurve = new THREE.CatmullRomCurve3(pts3);
+  const loop = mesh(new THREE.TubeGeometry(loopCurve, 120, 0.42, 24, false), metal ? plastic('#2b2f33') : powder(color));
+  loop.scale.z = 0.75; g.add(loop);
+  g.rotation.y = -0.55;
+  return g;
+}
+
+function strawCap(color) {
+  const g = new THREE.Group();
+  g.add(mesh(lathe([[0, 0], [2.18, 0], [2.2, 0.9], [0, 0.9]]), plastic('#9aa1a9')));
+  g.add(mesh(roundedCylinder(2.55, 2.8, 0.3, 0.8), powder(color)));
+  // Raised spout with the straw flipped up, hinged at the back.
+  g.add(mesh(roundedCylinder(1.05, 0.9, 0.2, 3.5), powder(color)));
+  const straw = new THREE.CatmullRomCurve3([new THREE.Vector3(0, 4.2, 0), new THREE.Vector3(0.15, 5.6, -0.3), new THREE.Vector3(0.55, 7.6, -0.9)]);
+  g.add(mesh(new THREE.TubeGeometry(straw, 60, 0.42, 24, false), plastic('#e9ecef')));
+  const tip = mesh(new THREE.SphereGeometry(0.46, 24, 16), plastic('#e9ecef')); tip.position.set(0.55, 7.6, -0.9); g.add(tip);
+  const hinge = mesh(new THREE.CylinderGeometry(0.28, 0.28, 1.4, 20), plastic('#c6ccd2'));
+  hinge.rotation.z = Math.PI / 2; hinge.position.set(0, 3.9, -1.25); g.add(hinge);
+  g.rotation.y = 0.5;
+  return g;
+}
+
+function carrySling(color) {
+  const g = new THREE.Group();
+  const inner = everydayBottle('#6f8396'); g.add(inner);
+  // Padded sleeve over the body, open at the top so the bottle's shoulder and cap show.
+  const sleeve = lathe([[0, -0.1], [4.0, -0.1], [4.42, 0.3], [4.5, 1.2], [4.5, 13.4], [4.42, 14.3], [4.28, 14.6], [4.1, 14.4]]);
+  g.add(mesh(sleeve, fabric(color)));
+  const dark = new THREE.Color(color).multiplyScalar(0.8);
+  for (const y of [2.2, 12.6]) {
+    const band = mesh(new THREE.TorusGeometry(4.51, 0.05, 8, 160), fabric(dark)); band.rotation.x = Math.PI / 2; band.position.y = y; g.add(band);
+  }
+  // A webbing strip down the front.
+  const strip = mesh(new THREE.CylinderGeometry(4.54, 4.54, 11.6, 64, 1, true, -0.24, 0.48), fabric(dark));
+  strip.position.y = 7.4; g.add(strip);
+  // Rings at each side and the strap rising between them.
+  for (const s of [-1, 1]) {
+    const ring = mesh(new THREE.TorusGeometry(0.7, 0.13, 14, 40), brushedSteel());
+    ring.position.set(s * 4.65, 14.2, 0); ring.rotation.y = Math.PI / 2; g.add(ring);
+  }
+  const strapPath = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(-4.7, 14.6, 0), new THREE.Vector3(-5.9, 20, -0.6), new THREE.Vector3(-5.5, 26, -1.2), new THREE.Vector3(-2.6, 30.5, -1.6),
+    new THREE.Vector3(0, 31.6, -1.7), new THREE.Vector3(2.6, 30.5, -1.6), new THREE.Vector3(5.5, 26, -1.2), new THREE.Vector3(5.9, 20, -0.6), new THREE.Vector3(4.7, 14.6, 0),
+  ]);
+  const shape = new THREE.Shape(); const w = 0.7, t = 0.16;
+  shape.moveTo(-t, -w); shape.lineTo(t, -w); shape.lineTo(t, w); shape.lineTo(-t, w); shape.lineTo(-t, -w);
+  const strap = mesh(new THREE.ExtrudeGeometry(shape, { steps: 260, bevelEnabled: false, extrudePath: strapPath }), fabric(color));
+  g.add(strap);
+  g.rotation.y = -0.35;
+  return g;
+}
+
+function bristleHead(radius, length, count, color) {
+  const geo = new THREE.CylinderGeometry(0.035, 0.035, radius, 4);
+  geo.translate(0, radius / 2, 0);
+  const inst = new THREE.InstancedMesh(geo, plastic(color), count);
+  inst.castShadow = true;
+  const m = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new THREE.Vector3(1, 1, 1), p = new THREE.Vector3();
+  for (let i = 0; i < count; i++) {
+    const y = (i / count) * length;
+    const angle = i * 2.399963; // golden angle spiral
+    const taper = Math.min(1, Math.min(y, length - y) / (length * 0.18) + 0.35);
+    q.setFromEuler(new THREE.Euler(0, angle, Math.PI / 2 + (Math.random() - 0.5) * 0.25));
+    s.set(1, Math.min(1, taper) * (0.9 + Math.random() * 0.2), 1);
+    p.set(0, y, 0);
+    m.compose(p, q, s); inst.setMatrixAt(i, m);
+  }
+  return inst;
+}
+
+function brushKit() {
+  const g = new THREE.Group();
+  // Long bottle brush.
+  const long = new THREE.Group();
+  long.add(mesh(roundedCylinder(0.62, 13, 0.3, 0), wood()));
+  const wire = mesh(new THREE.CylinderGeometry(0.1, 0.1, 9, 12), brushedSteel()); wire.position.y = 17.4; long.add(wire);
+  const head = bristleHead(1.5, 8.5, 2600, '#cdb08a'); head.position.y = 13.4; long.add(head);
+  long.rotation.z = 0.12; long.position.x = -0.5; g.add(long);
+  // Cap brush: short handle, round head.
+  const cap = new THREE.Group();
+  cap.add(mesh(roundedCylinder(0.55, 10, 0.28, 0), wood()));
+  const capHead = bristleHead(0.9, 2.2, 700, '#cdb08a'); capHead.position.y = 10.2; cap.add(capHead);
+  cap.rotation.z = -0.22; cap.position.x = 3.6; g.add(cap);
+  // Straw cleaner: a long wire with a slim tip.
+  const straw = new THREE.Group();
+  straw.add(mesh(new THREE.CylinderGeometry(0.07, 0.07, 22, 10).translate(0, 11, 0), brushedSteel()));
+  const strawHead = bristleHead(0.38, 4, 900, '#cdb08a'); strawHead.position.y = 18; straw.add(strawHead);
+  straw.rotation.z = 0.32; straw.position.x = -3.2; g.add(straw);
+  // Each brush stands on the floor.
+  for (const child of g.children) { child.updateMatrixWorld(true); child.position.y -= new THREE.Box3().setFromObject(child).min.y; }
+  g.rotation.y = 0.2;
+  return g;
+}
+
+// ---- render one product
+function render(name, object, { tilt = 0.1, fill = 0.74 } = {}) {
+  const scene = new THREE.Scene();
+  scene.background = BACKDROP;
+  scene.environment = envMap;
+  scene.add(new THREE.HemisphereLight('#ffffff', '#d9dfe6', 0.55));
+  const key = new THREE.DirectionalLight('#ffffff', 1.5); key.position.set(-25, 40, 45); scene.add(key);
+  const fillLight = new THREE.DirectionalLight('#ffffff', 0.45); fillLight.position.set(40, 15, 30); scene.add(fillLight);
+  const rim = new THREE.DirectionalLight('#ffffff', 0.5); rim.position.set(10, 30, -40); scene.add(rim);
+  scene.add(object);
+  // Sit the product on the floor, then a soft contact shadow under its footprint.
+  const base = new THREE.Box3().setFromObject(object);
+  object.position.y -= base.min.y;
+  const foot = new THREE.Box3().setFromObject(object).getSize(new THREE.Vector3());
+  const shadow = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: SHADOW, transparent: true, depthWrite: false, opacity: 0.55 }));
+  shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.01;
+  shadow.scale.set(Math.max(foot.x, 4) * 1.45, Math.max(foot.z, 4) * 1.45, 1);
+  scene.add(shadow);
+  const box = new THREE.Box3().setFromObject(object);
+  const size = box.getSize(new THREE.Vector3()); const center = box.getCenter(new THREE.Vector3());
+  const camera = new THREE.PerspectiveCamera(20, 1, 1, 2000);
+  const span = Math.max(size.y, size.x * 1.05) / fill;
+  const dist = span / 2 / Math.tan(THREE.MathUtils.degToRad(10));
+  camera.position.set(center.x, center.y + dist * Math.sin(tilt), center.z + dist * Math.cos(tilt));
+  camera.lookAt(center.x, center.y - size.y * 0.02, center.z);
+  renderer.render(scene, camera);
+  return new Promise((resolve) => renderer.domElement.toBlob(async (blob) => {
+    await fetch(`/save?name=${name}`, { method: 'POST', body: blob });
+    resolve();
+  }, 'image/png'));
+}
+
+const JOBS = [
+  ['bottle-slate', () => everydayBottle('#6f8396')],
+  ['bottle-sand', () => everydayBottle('#d9cbb5')],
+  ['bottle-sage', () => everydayBottle('#a9b8a2')],
+  ['tumbler-sand', () => travelTumbler('#d9cbb5')],
+  ['tumbler-slate', () => travelTumbler('#6f8396')],
+  ['tumbler-pine', () => travelTumbler('#3f5a4c')],
+  ['lid-steel', () => insulatedLid('#b8bec6', true), { fill: 0.6 }],
+  ['lid-black', () => insulatedLid('#2b2f33', false), { fill: 0.6 }],
+  ['sling-sand', () => carrySling('#d9cbb5'), { fill: 0.8 }],
+  ['sling-slate', () => carrySling('#6f8396'), { fill: 0.8 }],
+  ['straw-sage', () => strawCap('#a9b8a2'), { fill: 0.62 }],
+  ['brush-natural', () => brushKit(), { fill: 0.8 }],
+];
+
+window.renderAll = async (only) => {
+  for (const [name, make, opts] of JOBS) {
+    if (only && !only.includes(name)) continue;
+    document.getElementById('status').textContent = `rendering ${name}`;
+    await render(name, make(), opts);
+  }
+  document.getElementById('status').textContent = 'done';
+  return 'done';
+};
+document.getElementById('status').textContent = 'ready';
+</script>
+</body>
+</html>

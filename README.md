@@ -50,7 +50,8 @@ The store's theme follows Post to Pay's default look: 6px corners and 16px semib
 The shopper's Post to Pay result is shared across the store (`src/lib/storeState.ts`): once they qualify,
 every button, line and the pill show their discount. The cart, settings and result live in
 sessionStorage (`src/lib/demoState.ts`), so the Mobile preview shows the same cart as Desktop.
-Products other than the Everyday Bottle are drawn in code (`ProductArt.tsx`) in place of photos.
+Every product image is a 3D render made in code with three.js (`scripts/product-renders`), so the
+catalog matches; the renders are in `src/assets/products`.
 
 ## Merchant dashboard
 
