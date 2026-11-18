@@ -25,7 +25,7 @@ export default function Auth() {
   return (
     <div className="flex min-h-screen flex-col bg-card">
       <header className="mx-auto flex h-16 w-full max-w-[1080px] items-center px-4">
-        <img src={logo} alt="Vouch" className="h-6 w-auto" />
+        <img src={logo} alt="Vouch" className="h-5 w-auto" />
       </header>
       <main className="flex flex-1 items-center justify-center px-4 py-10">
         <div className="w-full max-w-[520px] overflow-hidden rounded-xl bg-card shadow-edge">
