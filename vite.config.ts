@@ -11,6 +11,7 @@ export default defineConfig(() => ({
   plugins: [react()],
   resolve: {
     alias: {
+      "@dashboard": path.resolve(__dirname, "./src/dashboard"),
       "@": path.resolve(__dirname, "./src"),
     },
   },
