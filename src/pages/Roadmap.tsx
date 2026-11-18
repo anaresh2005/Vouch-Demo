@@ -32,7 +32,7 @@ export default function Roadmap() {
               <span
                 className={cn(
                   'absolute left-0 top-1 h-4 w-4 rounded-full ring-4 ring-card',
-                  phase.live ? 'bg-success' : 'bg-card shadow-[inset_0_0_0_2px_hsl(var(--primary))]',
+                  phase.live ? 'bg-status-green' : 'bg-card shadow-[inset_0_0_0_2px_hsl(var(--primary))]',
                 )}
                 aria-hidden="true"
               />
@@ -41,13 +41,15 @@ export default function Roadmap() {
                 {phase.items.map((item) => (
                   <li key={item.title} className="px-4 py-3">
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="text-sm font-semibold text-foreground">{item.title}</p>
+                      <p className="text-sm font-medium text-foreground">{item.title}</p>
+                      {/* Palette badges (Figma, App UI Guidelines): a dot in the color, ink text, a light tint. */}
                       <span
                         className={cn(
-                          'inline-flex h-5 items-center rounded-sm px-1.5 text-xs font-semibold',
-                          item.inDemo ? 'bg-info-bg text-info shadow-[0_0_0_1px_hsl(var(--info-border))]' : 'bg-neutral-bg text-neutral shadow-[0_0_0_1px_hsl(var(--neutral-border))]',
+                          'inline-flex h-5 items-center gap-1.5 rounded-sm px-2 text-xs text-foreground',
+                          item.inDemo ? 'bg-status-sky/[.16]' : 'bg-status-gray/[.18]',
                         )}
                       >
+                        <span className={cn('h-1.5 w-1.5 rounded-full', item.inDemo ? 'bg-status-sky' : 'bg-status-gray')} aria-hidden="true" />
                         {item.inDemo ? 'In the demo' : 'Not in the demo'}
                       </span>
                     </div>

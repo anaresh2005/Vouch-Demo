@@ -63,10 +63,10 @@ export function SettingsMenu() {
             <button
               type="button"
               onClick={() => { resetDemoState(); setOpen(false); }}
-              className="flex h-7 items-center gap-1.5 rounded-md bg-card px-2.5 text-sm font-medium text-secondary-foreground shadow-edge hover:bg-accent"
+              className="flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md bg-card px-2.5 text-sm font-medium text-secondary-foreground shadow-edge hover:bg-accent"
             >
               <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-              Reset demo
+              Reset
             </button>
           </div>
         </div>

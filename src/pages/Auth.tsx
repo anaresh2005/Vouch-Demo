@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useDemoAuth } from '@/hooks/useDemoAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,8 +11,11 @@ export default function Auth() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
   const { isDemoAuthenticated, loading, demoLogin } = useDemoAuth();
+  // A page opened directly (say /dashboard) sent the visitor here; go back there after the password.
+  const from = (useLocation().state as { from?: string } | null)?.from;
+  const next = from && from !== '/' ? from : '/store';
 
-  if (!loading && isDemoAuthenticated) return <Navigate to="/store" replace />;
+  if (!loading && isDemoAuthenticated) return <Navigate to={next} replace />;
 
   const submit = (event: FormEvent) => {
     event.preventDefault();

@@ -16,7 +16,7 @@ let logoAspectRatio: number = 3.33; // default aspect ratio
 // change; text streams stay uncompressed.
 const LOGO_COMPRESSION = 'FAST';
 
-// Load logo as base64 and calculate aspect ratio
+// Load logo as base64 (the demo's PNG is rasterized from the new periwinkle logo in Figma) and calculate aspect ratio
 async function loadLogo(): Promise<string | null> {
   if (logoBase64) return logoBase64;
   

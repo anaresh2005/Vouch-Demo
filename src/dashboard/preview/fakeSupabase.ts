@@ -160,18 +160,50 @@ async function invoke(name: string, options?: { body?: { action?: string } }): P
     const body = (options?.body ?? {}) as { username?: string };
     const seed = [...(body.username ?? '')].reduce((n, c) => n + c.charCodeAt(0), 0);
     const followers = 4000 + (seed % 40) * 1500;
-    const posts = Array.from({ length: 6 }, (_, i) => ({ id: `sample-${i}`, url: 'https://www.instagram.com/', caption: 'Sample post (preview only)',
+    const posts = Array.from({ length: 6 }, (_, i) => ({ id: `sample-${i}`, url: 'https://www.instagram.com/', caption: 'Sample post (demo data)',
       thumbnail: null, views: Math.round(followers * (0.4 + i * 0.05)), likes: Math.round(followers * 0.04), comments: 12 + i, shares: 2,
       created: new Date(Date.now() - (i + 1) * 4 * 86_400_000).toISOString() }));
     return wait({ data: { error: false, fetchedAt: new Date(Date.now() - 2 * 86_400_000).toISOString(), data: {
       followers, engagementRate: 4.2, avgLikes: Math.round(followers * 0.04), avgComments: 18, avgViews: Math.round(followers * 0.5), avgShares: 3,
       postsCount: 120 + (seed % 200), postingFrequency: null, nonSponsoredPostsMedianViews: Math.round(followers * 0.45),
       nonSponsoredPostsMedianLikes: Math.round(followers * 0.035), sponsoredPostsMedianViews: null, sponsoredPostsMedianLikes: null,
-      audience: { countries: [], cities: [], languages: [], ages: [], genders: [], interests: [], credibility: null, notableUsers: [] },
+      audience: sampleAudience(body.username ?? ''),
       recentPosts: posts, popularPosts: [], sponsoredPosts: [],
     } }, error: null });
   }
   return unavailable(READ_ONLY);
+}
+
+// Demo only: an invented audience for each creator, varied by username so every profile looks
+// different. Percentages are whole numbers that add up to 100; credibility is 0–1, as Modash gives it.
+function sampleAudience(username: string) {
+  let seed = [...username].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 7) || 1;
+  const random = () => { seed = (seed * 1_103_515_245 + 12_345) % 2_147_483_648; return seed / 2_147_483_648; };
+  // Weights, shuffled a little per creator, turned into whole percentages that sum to 100.
+  const split = <T,>(items: T[], weights: number[]) => {
+    const jittered = weights.map(w => w * (0.6 + random() * 0.8));
+    const total = jittered.reduce((sum, w) => sum + w, 0);
+    const shares = jittered.map(w => Math.round((w / total) * 100));
+    shares[0] += 100 - shares.reduce((sum, n) => sum + n, 0);
+    return items.map((item, i) => ({ item, percentage: shares[i] })).sort((a, b) => b.percentage - a.percentage);
+  };
+  const female = 45 + Math.round(random() * 30);
+  return {
+    countries: split(['United States', 'Canada', 'United Kingdom', 'Australia', 'Germany'], [62, 12, 9, 6, 4])
+      .map(({ item, percentage }) => ({ country: item, percentage })),
+    cities: split(['New York', 'Los Angeles', 'Portland', 'Boston', 'Seattle', 'Denver'], [14, 11, 9, 8, 7, 6])
+      .map(({ item, percentage }) => ({ city: item, percentage: Math.round(percentage * 0.55) })),
+    languages: split(['English', 'Spanish', 'French', 'Other'], [84, 8, 4, 4])
+      .map(({ item, percentage }) => ({ language: item, percentage })),
+    ages: split(['13-17', '18-24', '25-34', '35-44', '45-64'], [4, 27, 38, 19, 12])
+      .map(({ item, percentage }) => ({ range: item, percentage }))
+      .sort((a, b) => a.range.localeCompare(b.range, undefined, { numeric: true })),
+    genders: [{ type: 'Female', percentage: female }, { type: 'Male', percentage: 100 - female }],
+    interests: ['Travel, Tourism & Aviation', 'Fitness & Yoga', 'Restaurants, Food & Grocery', 'Camera & Photography', 'Sports', 'Home Decor, Furniture & Garden']
+      .filter(() => random() > 0.3).slice(0, 5),
+    credibility: Math.round((0.72 + random() * 0.24) * 100) / 100,
+    notableUsers: [],
+  };
 }
 
 // ── Auth ───────────────────────────────────────────────────────────────────

@@ -16,8 +16,8 @@ import {
 import { activateCartEmbedUrl, addPostToPayBlockUrl } from '@dashboard/lib/storefrontDeepLink';
 import type { Brand } from '@dashboard/types/vouch';
 // The storefront button's own icon, so the preview shows exactly what shoppers see.
-import vouchIcon from '@dashboard/assets/ext/vouch-icon-white.png';
-import vouchLogo from '@dashboard/assets/ext/vouch-icon-periwinkle.png';
+import vouchIcon from '@dashboard/assets/vouch-icon-white.svg';
+import vouchLogo from '@dashboard/assets/vouch-icon-periwinkle.svg';
 import { UnsavedHint } from './UnsavedHint';
 
 // Everything saved here reaches the storefront: the on/off switch (admin switches, October 8), the look
