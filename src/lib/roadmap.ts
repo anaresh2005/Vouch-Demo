@@ -3,7 +3,7 @@
 export interface RoadmapPhase {
   title: string;
   live: boolean;
-  /** inDemo: whether the shopper demo shows it. */
+  /** inDemo: whether the demo shows it. */
   items: { title: string; description: string; inDemo: boolean }[];
 }
 
@@ -21,7 +21,7 @@ export const ROADMAP: RoadmapPhase[] = [
         title: 'Merchant dashboard',
         description:
           'A timeline of every Vouch order. Brands open each order’s post and charges, track return on investment from Shopify sales, set who can Vouch, and see each creator’s audience and their creators’ audience overall.',
-        inDemo: false,
+        inDemo: true,
       },
     ],
   },

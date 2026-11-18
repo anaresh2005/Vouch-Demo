@@ -83,7 +83,7 @@ export function VouchLine({ priceCents, scope }: { priceCents: number; scope: st
 }
 
 /** The top-strip slide: one slide in the store's announcement bar, in the bar's colors and font. */
-export function TopStripSlide({ scope }: { scope: string }) {
+export function TopStripSlide({ scope, tone = 'dark' }: { scope: string; tone?: 'dark' | 'light' }) {
   const { platform, visible } = useCyclingPlatform();
   return (
     <button type="button" onClick={() => openVouchPopup(scope)} className="inline-flex items-center gap-1.5 hover:underline">
@@ -91,7 +91,8 @@ export function TopStripSlide({ scope }: { scope: string }) {
         Up to 100% OFF if you post about your purchase on{' '}
         <span className="font-medium transition-opacity" style={{ opacity: visible ? 1 : 0, transitionDuration: `${FADE_MS}ms` }}>{PLATFORMS[platform].name}</span>
       </span>
-      <img src={logoGradient} alt="Vouch" className="h-[11px] w-auto rounded-[2px] bg-white px-[3px] py-px box-content" />
+      {/* White on a dark bar, the gradient logo on a light one, as in Figma. */}
+      <img src={tone === 'dark' ? logoWhite : logoGradient} alt="Vouch" className="h-[11px] w-auto" />
       <span aria-hidden="true">→</span>
     </button>
   );

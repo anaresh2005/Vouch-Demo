@@ -56,6 +56,8 @@ const NAV: [string, string][] = [['shop', 'Shop all'], ['collections/bottles', '
 
 function StoreLayout() {
   const path = useStorePath();
+  // In the phone frame the store has the screen to itself, so its header sticks; on the demo page the demo's header does.
+  const framed = useContext(StoreBase).startsWith('/frame');
   const cart = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const { pathname } = useLocation();
@@ -64,7 +66,7 @@ function StoreLayout() {
   return (
     <div className="flex min-h-full flex-col bg-white font-sans text-[#121212]">
       <AnnouncementBar />
-      <header className="sticky top-0 z-30 border-b border-[#e8e8e8] bg-white">
+      <header className={cn('z-30 border-b border-[#e8e8e8] bg-white', framed && 'sticky top-0')}>
         <div className="mx-auto flex h-16 max-w-[1200px] items-center gap-4 px-4 md:px-8">
           <button type="button" className="-ml-1 p-1 md:hidden" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
