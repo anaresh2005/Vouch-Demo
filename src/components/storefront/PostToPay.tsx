@@ -3,6 +3,7 @@ import type { AccountStats, ScannedPlatform, SocialPlatform } from '@/types/vouc
 import { AccountNotFoundError, DailyLimitError, lookupUsername } from '@/lib/accountLookup';
 import { DEMO_FULL_DISCOUNT_FOLLOWERS, quote, type PostToPayQuote } from '@/lib/postToPayDiscount';
 import { demoStore, money } from '@/lib/demoStore';
+import { useCart, useVouchAccount } from '@/lib/storeState';
 import terms from '@/content/post-to-pay-terms.txt?raw';
 import logo from '@/assets/vouch-logo-gradient.svg';
 import { PlatformMark } from './platformMarks';
@@ -22,7 +23,7 @@ const PROGRESS: Step[] = ['platform', 'username', 'approval', 'offer'];
 // Every platform on the roadmap, in the button's cycle order. Only Instagram and TikTok are scanned
 // (through Modash); the others accept any username at 100% off and say so (Henry, November 2, 2026).
 // `create` is what the shopper posts, shown in the posting condition on "You're in".
-const PLATFORMS: Record<SocialPlatform, { name: string; create: string; scanned: boolean }> = {
+export const PLATFORMS: Record<SocialPlatform, { name: string; create: string; scanned: boolean }> = {
   instagram: { name: 'Instagram', create: 'a post, Reel, or Story', scanned: true },
   tiktok: { name: 'TikTok', create: 'a TikTok video', scanned: true },
   snapchat: { name: 'Snapchat', create: 'a Snapchat Story', scanned: false },
@@ -33,7 +34,7 @@ const PLATFORMS: Record<SocialPlatform, { name: string; create: string; scanned:
   linkedin: { name: 'LinkedIn', create: 'a LinkedIn post', scanned: false },
   substack: { name: 'Substack', create: 'a Substack post or Note', scanned: false },
 };
-const PLATFORM_ORDER = Object.keys(PLATFORMS) as SocialPlatform[];
+export const PLATFORM_ORDER = Object.keys(PLATFORMS) as SocialPlatform[];
 
 // Demo ambassador (affiliate) program: anyone who uses the shopper's code gets 10% off, and the
 // shopper earns 10% of those sales. The code is emailed after checkout, never shown before it.
@@ -45,24 +46,32 @@ interface Props {
   /** Product page: the item is added to the cart. Cart and checkout pages (roadmap): the offer covers the whole order. */
   placement: 'product' | 'cart' | 'checkout';
   priceCents: number;
+  /** On a product page: what "Add to cart" adds. */
+  item?: { handle: string; variantId: string };
+  /** On the cart page: one row per item in "You're in", in place of "Regular price". */
+  lines?: { label: string; cents: number }[];
+  /** In the popup: the panel alone, open from the start, with no launch button. */
+  embedded?: { step: Step; platform?: SocialPlatform; onClose: () => void };
 }
 
-interface Account {
-  username: string;
-  /** Null for platforms the demo doesn't scan. */
-  stats: AccountStats | null;
-}
-
-export function PostToPay({ placement, priceCents }: Props) {
+export function PostToPay({ placement, priceCents, item, lines, embedded }: Props) {
   const wholeOrder = placement !== 'product';
-  const [open, setOpen] = useState(false);
-  const [step, setStep] = useState<Step>('platform');
-  const [platform, setPlatform] = useState<SocialPlatform>('instagram');
-  const [chosen, setChosen] = useState(false);
-  const [username, setUsername] = useState('');
+  const { account: sharedAccount, setAccount: setSharedAccount } = useVouchAccount();
+  const cart = useCart();
+  const [open, setOpenState] = useState(!!embedded);
+  // A shopper who already qualified (here or in another surface) starts at their result.
+  const [step, setStep] = useState<Step>(() => (embedded?.platform ? 'username' : sharedAccount && !embedded ? 'approval' : embedded?.step ?? 'platform'));
+  const [platform, setPlatform] = useState<SocialPlatform>(embedded?.platform ?? sharedAccount?.platform ?? 'instagram');
+  const chosen = !!sharedAccount;
+  const [username, setUsername] = useState(embedded?.platform && embedded.platform !== sharedAccount?.platform ? '' : sharedAccount?.username ?? '');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const [account, setAccount] = useState<Account | null>(null);
+  const account = sharedAccount && sharedAccount.platform === platform ? sharedAccount : null;
+  const setAccount = (next: { username: string; stats: AccountStats | null } | null) => setSharedAccount(next && { platform, ...next });
+  const setOpen = (value: boolean) => {
+    if (!value && embedded) embedded.onClose();
+    else setOpenState(value);
+  };
   const [addedCount, setAddedCount] = useState(0);
   const [codeRequested, setCodeRequested] = useState(false);
   const [termsOpen, setTermsOpen] = useState(false);
@@ -91,12 +100,9 @@ export function PostToPay({ placement, priceCents }: Props) {
   };
 
   const choose = (next: SocialPlatform) => {
-    if (next !== platform) {
-      setAccount(null);
-      setUsername('');
-    }
+    if (next !== sharedAccount?.platform) setUsername('');
+    else setUsername(sharedAccount.username);
     setPlatform(next);
-    setChosen(true);
     go('username');
   };
 
@@ -129,6 +135,7 @@ export function PostToPay({ placement, priceCents }: Props) {
   // Only the product page adds to the cart here; the cart and checkout pages end at the Shopify hand-off.
   const accept = (event: FormEvent) => {
     event.preventDefault();
+    if (item) cart.add(item.handle, item.variantId);
     setAddedCount((count) => count + 1);
     go('added');
   };
@@ -177,13 +184,22 @@ export function PostToPay({ placement, priceCents }: Props) {
   );
 
   return (
-    <div className={placement === 'checkout' ? 'vouch-proof vouch-proof--express' : 'vouch-proof'}>
+    <div className={embedded ? 'vouch-proof vouch-proof--embedded' : placement === 'checkout' ? 'vouch-proof vouch-proof--express' : 'vouch-proof'}>
+      {!embedded && <>
       <button
         type="button"
         className="vouch-proof__button vouch-proof__launch"
         hidden={open}
         aria-expanded={open}
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          // Qualified elsewhere in the store (another page, the popup): open at the result.
+          if (sharedAccount && step === 'platform') {
+            setPlatform(sharedAccount.platform);
+            setUsername(sharedAccount.username);
+            setStep('approval');
+          }
+          setOpen(true);
+        }}
       >
         <CyclingMark platforms={chosen ? [platform] : PLATFORM_ORDER} />
         <span>{launchLabel}</span>
@@ -191,6 +207,7 @@ export function PostToPay({ placement, priceCents }: Props) {
       <p className="vouch-proof__tagline">
         {!offer && <><strong>Up to 100% off.</strong> </>}Terms apply. Powered by Vouch
       </p>
+      </>}
 
       {open && (
         <section className="vouch-proof__panel" aria-label="Post to Pay">
@@ -305,7 +322,7 @@ export function PostToPay({ placement, priceCents }: Props) {
                   <p>Create {info.create} within <strong>{demoStore.postingWindowDays} days of delivery</strong> to keep your discount</p>
                 </div>
                 <dl className="vouch-proof__deal">
-                  <div><dt>Regular price</dt><dd>{money(offer.priceCents)}</dd></div>
+                  {lines?.length ? <LineRows lines={lines} /> : <div><dt>Regular price</dt><dd>{money(offer.priceCents)}</dd></div>}
                   {shippingCents > 0 && <div><dt>Express shipping</dt><dd>{money(shippingCents)}</dd></div>}
                   <div className="vouch-proof__discount vouch-proof__group">
                     <dt>Vouch discount <span className="vouch-proof__badge">{offer.percent}% off</span></dt>
@@ -419,6 +436,24 @@ export function PostToPay({ placement, priceCents }: Props) {
         </section>
       )}
     </div>
+  );
+}
+
+// Cart items in "You're in": the first three, then "+ N more items" with their total, which expands.
+function LineRows({ lines }: { lines: { label: string; cents: number }[] }) {
+  const [expanded, setExpanded] = useState(false);
+  const shown = expanded || lines.length <= 3 ? lines : lines.slice(0, 3);
+  const rest = lines.slice(3);
+  return (
+    <>
+      {shown.map((line, index) => <div key={index}><dt>{line.label}</dt><dd>{money(line.cents)}</dd></div>)}
+      {!expanded && rest.length > 0 && (
+        <div>
+          <dt><button type="button" className="vouch-proof__more" onClick={() => setExpanded(true)}>+ {rest.length} more {rest.length === 1 ? 'item' : 'items'}</button></dt>
+          <dd>{money(rest.reduce((sum, line) => sum + line.cents, 0))}</dd>
+        </div>
+      )}
+    </>
   );
 }
 

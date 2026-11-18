@@ -1,37 +1,44 @@
-import { useState, type ReactNode } from 'react';
-import { BatteryFull, CreditCard, Map, Monitor, ShoppingBag, ShoppingCart, Signal, Smartphone, Wifi, type LucideIcon } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { Storefront, type StorePage } from '@/components/storefront/Storefront';
+import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
+import { BatteryFull, LayoutDashboard, Map, Monitor, Signal, Smartphone, Store, Wifi, type LucideIcon } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Storefront } from '@/components/storefront/Storefront';
+import { DemoLogo } from '@/components/DemoLogo';
+import { SettingsMenu } from '@/components/SettingsMenu';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
-import logo from '@/assets/vouch-logo-periwinkle.png';
 
+const MerchantDashboard = lazy(() => import('@/dashboard/MerchantDashboard'));
+
+type View = 'store' | 'dashboard';
 type ViewMode = 'desktop' | 'mobile';
 
-export default function Demo() {
+// The demo page: the Harbor & Pine store (where shoppers meet Post to Pay) or the merchant's
+// dashboard, with Desktop and Mobile previews, the roadmap and the placement settings.
+export default function Demo({ view }: { view: View }) {
   const [viewMode, setViewMode] = useState<ViewMode>('desktop');
-  const [page, setPage] = useState<StorePage>('product');
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
   // On a phone the demo is already the mobile experience, so there's no preview frame.
   const showFrame = viewMode === 'mobile' && !isMobile;
+  // Where each view was left, so switching back returns there.
+  const lastPath = useRef<Record<View, string>>({ store: '/store', dashboard: '/dashboard' });
+  lastPath.current[view] = pathname;
 
   return (
     <div className="flex min-h-screen flex-col bg-secondary">
-      <header className="sticky top-0 z-30 bg-card shadow-[inset_0_-1px_0_hsl(var(--divider))]">
-        <div className="mx-auto flex min-h-14 max-w-[1120px] flex-wrap items-center gap-2 px-4 py-2.5">
-          <img src={logo} alt="Vouch" className="h-5 w-auto" />
-          <span className="hidden text-sm text-muted-foreground lg:inline">Shopper demo</span>
-          {/* On phones the page switch takes its own row under the logo. */}
+      <header className="sticky top-0 z-40 bg-card shadow-[inset_0_-1px_0_hsl(var(--divider))]">
+        <div className="mx-auto flex min-h-14 max-w-[1280px] flex-wrap items-center gap-2 px-4 py-2.5">
+          <Link to="/store" aria-label="Demo home"><DemoLogo /></Link>
           <div className="ml-auto flex items-center gap-2 max-sm:contents">
-            {/* Post to Pay appears on product pages and (roadmap) the cart and checkout pages. */}
-            <Segmented<StorePage>
+            <Segmented<View>
               className="max-sm:order-last max-sm:w-full"
-              label="Page"
-              value={page}
-              onChange={setPage}
-              options={[['product', ShoppingBag, 'Product page', 'Product'], ['cart', ShoppingCart, 'Cart page', 'Cart'], ['checkout', CreditCard, 'Checkout', 'Checkout']]}
+              label="View"
+              value={view}
+              onChange={(next) => navigate(lastPath.current[next])}
+              options={[['store', Store, 'Harbor & Pine store', 'Store'], ['dashboard', LayoutDashboard, 'Merchant dashboard', 'Dashboard']]}
             />
-            {!isMobile && (
+            {!isMobile && view === 'store' && (
               <Segmented<ViewMode>
                 label="Device"
                 value={viewMode}
@@ -41,29 +48,47 @@ export default function Demo() {
             )}
             <Link
               to="/roadmap"
-              className="flex h-8 max-sm:ml-auto items-center gap-1.5 whitespace-nowrap rounded-md bg-card px-2.5 text-sm font-semibold text-secondary-foreground shadow-edge hover:bg-secondary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/25"
+              className="flex h-8 items-center gap-1.5 whitespace-nowrap rounded-md bg-card px-2.5 text-sm font-medium text-secondary-foreground shadow-edge hover:bg-secondary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/25 max-sm:ml-auto"
             >
               <Map className="h-4 w-4" aria-hidden="true" />
               Roadmap
             </Link>
+            {view === 'store' && <SettingsMenu />}
           </div>
         </div>
       </header>
 
-      {showFrame ? (
+      {view === 'dashboard' ? (
+        <main className="flex-1 bg-card">
+          <Suspense fallback={null}><MerchantDashboard /></Suspense>
+        </main>
+      ) : showFrame ? (
         <main className="flex flex-1 items-start justify-center py-8">
-          <Phone>
-            {/* A real 375px viewport, so the store's own mobile layout applies. */}
-            <iframe key={page} src={`/checkout/store?page=${page}`} title="Shopper demo on mobile" className="block h-[765px] w-[375px] border-0" />
-          </Phone>
+          <Phone><StoreFrame /></Phone>
         </main>
       ) : (
         <main className="flex-1 bg-white">
-          <Storefront key={page} page={page} />
+          <Storefront base="/store" />
         </main>
       )}
     </div>
   );
+}
+
+// The store at a real 375px viewport, so its own mobile layout applies. It opens on the page the
+// desktop view was showing, and as the shopper moves around inside it the demo's address follows.
+function StoreFrame() {
+  const { pathname, hash } = useLocation();
+  const navigate = useNavigate();
+  const [src] = useState(`/frame${pathname}${hash}`);
+  useEffect(() => {
+    const onMessage = (event: MessageEvent) => {
+      if (event.origin === location.origin && event.data?.type === 'vouch-frame-path') navigate(event.data.path, { replace: true });
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, [navigate]);
+  return <iframe src={src} title="Harbor & Pine on mobile" className="block h-[765px] w-[375px] border-0" />;
 }
 
 function Segmented<T extends string>({ label, value, onChange, options, className }: {
