@@ -11,7 +11,7 @@ It has two views, switched in the header:
 - **Merchant dashboard**: the product's dashboard, copied into `src/dashboard` and restyled to the App
   UI Guidelines (see "Merchant dashboard" below).
 
-The settings gear (store view) switches each place Post to Pay appears on or off; Reset demo there
+The settings gear (store view) switches each place Post to Pay appears on or off; Reset there
 clears the cart, the settings and the shopper's Post to Pay result. The Roadmap button opens
 `/roadmap`, a development timeline (live today, by the end of 2026, next) that marks what the demo
 shows; its content is in `src/lib/roadmap.ts`.
@@ -30,8 +30,9 @@ Roadmap features mocked in the demo:
 - **Secondary callouts.** From Figma's Post to Pay page ("Secondary callouts"): the line under the price,
   the line under the cart total, the footer badge, the top-strip slide, the unlocked pill and the popup
   (for visitors from a social app; "Show the popup now" in the settings opens it). The thank-you page
-  block is left out for now. Defaults: the three buttons and the two lines on, the rest off
-  (`src/lib/demoSettings.ts`).
+  block is left out for now. Defaults: everything on except the popup
+  (`src/lib/demoSettings.ts`). The line under the price, the top strip and the button's icon change
+  platform together, on one clock. The footer shows the standard Shopify payment icons beside the badge.
 - **Checkout hand-off.** Where the live product sends the shopper to Shopify checkout to enter their card
   (Check out, or Continue to payment at checkout, inside the panel), the demo ends: the button is shown but
   disabled, and a "Demo only" note explains the hand-off. The store's own checkout page has its card

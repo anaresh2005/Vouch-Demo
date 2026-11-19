@@ -1,9 +1,9 @@
 import { useDemoState, writeState } from './demoState';
 
 // Where Vouch appears in the demo store. The groups follow the Post to Pay page in Figma ("Vouch
-// Branding (Revamped)": the button, then Secondary callouts). Defaults agreed with Henry,
-// November 18, 2026: the three buttons and the two lines are on; the rest start off. The thank-you
-// page block is left out of the demo for now.
+// Branding (Revamped)": the button, then Secondary callouts). Defaults (Henry, November 18, 2026):
+// everything is on except the social-app popup. The thank-you page block is left out of the demo
+// for now.
 export interface VouchSettings {
   buttonProduct: boolean;
   buttonCart: boolean;
@@ -24,9 +24,9 @@ export const DEFAULT_SETTINGS: VouchSettings = {
   buttonCheckout: true,
   priceLine: true,
   cartTotalLine: true,
-  footerBadge: false,
-  topStrip: false,
-  unlockedPill: false,
+  footerBadge: true,
+  topStrip: true,
+  unlockedPill: true,
   socialPopup: false,
 };
 
