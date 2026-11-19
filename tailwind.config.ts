@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
+import typography from "@tailwindcss/typography";
 
 export default {
   darkMode: ["class"],
@@ -76,6 +77,13 @@ export default {
         divider: "hsl(var(--divider))",
         skeleton: "hsl(var(--skeleton))",
         banner: "hsl(var(--banner))",
+        status: {
+          gray: "hsl(var(--status-gray))",
+          sky: "hsl(var(--status-sky))",
+          rose: "hsl(var(--status-rose))",
+          green: "hsl(var(--status-green))",
+          red: "hsl(var(--status-red))",
+        },
         success: {
           DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",
@@ -110,8 +118,8 @@ export default {
         },
       },
       fontSize: {
-        // Page titles (28/36 bold); everything else uses Tailwind's 12/14/16/20 steps.
-        title: ["1.75rem", { lineHeight: "2.25rem", fontWeight: "700" }],
+        // Page titles (28/36 Semi Bold, -0.5px: "Vouch App / Page title"); everything else uses Tailwind's 12/14/16/20 steps.
+        title: ["1.75rem", { lineHeight: "2.25rem", fontWeight: "600", letterSpacing: "-0.5px" }],
       },
       borderRadius: {
         sm: "0.25rem",   // badges, small elements
@@ -166,5 +174,5 @@ export default {
       },
     },
   },
-  plugins: [animate],
+  plugins: [animate, typography],
 } satisfies Config;

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { ROADMAP } from '@/lib/roadmap';
 import { cn } from '@/lib/utils';
-import logo from '@/assets/vouch-logo-periwinkle.png';
+import { DemoLogo } from '@/components/DemoLogo';
 
 // The development timeline: what's live, what the demo shows, and what comes next.
 export default function Roadmap() {
@@ -10,9 +10,9 @@ export default function Roadmap() {
     <div className="min-h-screen bg-card">
       <header className="sticky top-0 z-30 bg-card shadow-[inset_0_-1px_0_hsl(var(--divider))]">
         <div className="mx-auto flex h-14 max-w-[1120px] items-center gap-3 px-4">
-          <img src={logo} alt="Vouch" className="h-5 w-auto" />
+          <DemoLogo />
           <Link
-            to="/checkout"
+            to="/store"
             className="ml-auto flex h-8 items-center gap-1.5 rounded-md px-2.5 text-sm font-semibold text-secondary-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/25"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
@@ -23,7 +23,7 @@ export default function Roadmap() {
 
       <main className="mx-auto max-w-[720px] px-4 pb-16 pt-8 sm:pt-10">
         <h1 className="text-title text-heading">Development timeline</h1>
-        <p className="mt-2 text-sm text-body">What Vouch does today, what the shopper demo shows, and what comes next.</p>
+        <p className="mt-2 text-sm text-body">What Vouch does today, what the demo shows, and what comes next.</p>
 
         <ol className="mt-8">
           {ROADMAP.map((phase, index) => (
@@ -32,7 +32,7 @@ export default function Roadmap() {
               <span
                 className={cn(
                   'absolute left-0 top-1 h-4 w-4 rounded-full ring-4 ring-card',
-                  phase.live ? 'bg-success' : 'bg-card shadow-[inset_0_0_0_2px_hsl(var(--primary))]',
+                  phase.live ? 'bg-status-green' : 'bg-card shadow-[inset_0_0_0_2px_hsl(var(--primary))]',
                 )}
                 aria-hidden="true"
               />
@@ -41,13 +41,15 @@ export default function Roadmap() {
                 {phase.items.map((item) => (
                   <li key={item.title} className="px-4 py-3">
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="text-sm font-semibold text-foreground">{item.title}</p>
+                      <p className="text-sm font-medium text-foreground">{item.title}</p>
+                      {/* Palette badges (Figma, App UI Guidelines): a dot in the color, ink text, a light tint. */}
                       <span
                         className={cn(
-                          'inline-flex h-5 items-center rounded-sm px-1.5 text-xs font-semibold',
-                          item.inDemo ? 'bg-info-bg text-info shadow-[0_0_0_1px_hsl(var(--info-border))]' : 'bg-neutral-bg text-neutral shadow-[0_0_0_1px_hsl(var(--neutral-border))]',
+                          'inline-flex h-5 items-center gap-1.5 rounded-sm px-2 text-xs text-foreground',
+                          item.inDemo ? 'bg-status-sky/[.16]' : 'bg-status-gray/[.18]',
                         )}
                       >
+                        <span className={cn('h-1.5 w-1.5 rounded-full', item.inDemo ? 'bg-status-sky' : 'bg-status-gray')} aria-hidden="true" />
                         {item.inDemo ? 'In the demo' : 'Not in the demo'}
                       </span>
                     </div>
