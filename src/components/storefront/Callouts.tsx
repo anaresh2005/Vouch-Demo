@@ -6,6 +6,7 @@ import { useVouchSettings } from '@/lib/demoSettings';
 import { cn } from '@/lib/utils';
 import logoGradient from '@/assets/vouch-logo-gradient.svg';
 import logoWhite from '@/assets/vouch-logo-white.svg';
+import wordmarkWhite from '@/assets/vouch-wordmark-white.svg';
 import { PlatformMark } from './platformMarks';
 import { PLATFORMS, PLATFORM_ORDER, PostToPay } from './PostToPay';
 import { SWAP_MS, usePlatformTick } from './platformCycle';
@@ -100,15 +101,18 @@ export function TopStripSlide({ scope, tone = 'dark' }: { scope: string; tone?: 
   );
 }
 
-/** Sits with the footer's payment logos at the same 38 × 24 size; white, for the store's dark footer. */
-export function FooterBadge({ variant = 'white' }: { variant?: 'white' | 'gradient' }) {
-  return variant === 'gradient' ? (
-    <span className="grid h-6 w-[38px] place-items-center rounded-[3px] bg-[linear-gradient(135deg,#4a54e2,#2330d4)]" title="Post to Pay by Vouch">
-      <img src={logoWhite} alt="Vouch" className="h-[6.5px] w-auto" />
-    </span>
-  ) : (
-    <span className="grid h-6 w-[38px] place-items-center rounded-[3px] border border-[#d9d9d9] bg-white" title="Post to Pay by Vouch">
-      <img src={logoGradient} alt="Vouch" className="h-[6.5px] w-auto" />
+/**
+ * Sits with the footer's payment logos at the same 38 × 24 size. Figma's updated badge (Secondary
+ * callouts, "Badge / Gradient"): the Post to Pay gradient with the white wordmark alone, no icon, so
+ * the word is bigger and easier to read this small.
+ */
+export function FooterBadge() {
+  return (
+    <span
+      className="grid h-6 w-[38px] place-items-center overflow-hidden rounded-[3px] bg-[linear-gradient(147.7deg,#4a54e2,#2330d4)]"
+      title="Post to Pay by Vouch"
+    >
+      <img src={wordmarkWhite} alt="Vouch" width={30.5} height={8.637} className="block h-[8.637px] w-[30.5px]" />
     </span>
   );
 }

@@ -205,9 +205,12 @@ export function PostToPay({ placement, priceCents, item, lines, embedded }: Prop
         <CyclingMark platforms={chosen ? [platform] : PLATFORM_ORDER} />
         <span>{launchLabel}</span>
       </button>
-      <p className="vouch-proof__tagline">
-        {!offer && <><strong>Up to 100% off.</strong> </>}Terms apply. Powered by Vouch
-      </p>
+      {/* Not on checkout: among the other express buttons it's unclear which one it belongs to (Henry, November 18). */}
+      {placement !== 'checkout' && (
+        <p className="vouch-proof__tagline">
+          {!offer && <><strong>Up to 100% off.</strong> </>}Terms apply. Powered by Vouch
+        </p>
+      )}
       </>}
 
       {open && (
