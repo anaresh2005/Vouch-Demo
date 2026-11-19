@@ -117,7 +117,7 @@ function AnnouncementBar() {
   const product = findProduct(useLocation().pathname.match(/products\/([^/]+)/)?.[1] ?? handle);
   const slides: ReactNode[] = [
     <span key="ship">Free shipping on orders over {money(demoStore.freeShippingOverCents)}</span>,
-    ...(settings.topStrip ? [<TopStripSlide key="vouch" scope={product ? `product:${product.handle}` : 'order'} />] : []),
+    ...(settings.topStrip ? [<TopStripSlide key="vouch" scope={product ? `product:${product.handle}` : 'order'} durationMs={SLIDE_MS} />] : []),
     <span key="new">New: the Travel Tumbler, in three colors</span>,
   ];
   const [index, setIndex] = useState(0);

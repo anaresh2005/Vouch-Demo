@@ -6,6 +6,7 @@ import { useVouchSettings } from '@/lib/demoSettings';
 import { cn } from '@/lib/utils';
 import logoGradient from '@/assets/vouch-logo-gradient.svg';
 import logoWhite from '@/assets/vouch-logo-white.svg';
+import wordmarkWhite from '@/assets/vouch-wordmark-white.svg';
 import { PlatformMark } from './platformMarks';
 import { PLATFORMS, PLATFORM_ORDER, PostToPay } from './PostToPay';
 import { SWAP_MS, usePlatformTick } from './platformCycle';
@@ -84,14 +85,47 @@ export function VouchLine({ priceCents, scope }: { priceCents: number; scope: st
   );
 }
 
-/** The top-strip slide: one slide in the store's announcement bar, in the bar's colors and font. */
-export function TopStripSlide({ scope, tone = 'dark' }: { scope: string; tone?: 'dark' | 'light' }) {
-  const { platform, visible } = useCyclingPlatform();
+// The top-strip slide shows for one announcement-bar turn, so instead of joining the shared clock
+// (which it would pick up mid-swap) it plays the same short sequence every time it appears: the
+// first platform, one crossfade halfway through its turn, then the second (Henry, November 18).
+const STRIP_PLATFORMS = PLATFORM_ORDER.slice(0, 2);
+const STRIP_LONGEST = STRIP_PLATFORMS.map((id) => PLATFORMS[id].name).sort((a, b) => b.length - a.length)[0];
+
+function useStripPlatform(durationMs: number) {
+  const [index, setIndex] = useState(0);
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // The name finishes fading back in at the middle of the slide's turn.
+    const out = setTimeout(() => setVisible(false), durationMs / 2 - FADE_MS);
+    const swap = setTimeout(() => {
+      setIndex(1);
+      setVisible(true);
+    }, durationMs / 2);
+    return () => { clearTimeout(out); clearTimeout(swap); };
+  }, [durationMs]);
+  return { platform: STRIP_PLATFORMS[index], visible };
+}
+
+/**
+ * The top-strip slide: one slide in the store's announcement bar, in the bar's colors and font. The
+ * name sits in a fixed slot as wide as the longer name, so the centered line doesn't move.
+ */
+export function TopStripSlide({ scope, tone = 'dark', durationMs }: { scope: string; tone?: 'dark' | 'light'; durationMs: number }) {
+  const { platform, visible } = useStripPlatform(durationMs);
   return (
     <button type="button" onClick={() => openVouchPopup(scope)} className="inline-flex items-center gap-1.5 hover:underline">
       <span>
         Up to 100% OFF if you post about your purchase on{' '}
-        <span className="font-medium transition-opacity" style={{ opacity: visible ? 1 : 0, transitionDuration: `${FADE_MS}ms` }}>{PLATFORMS[platform].name}</span>
+        <span className="relative inline-block text-left font-medium">
+          <span className="invisible" aria-hidden="true">{STRIP_LONGEST}</span>
+          <span
+            className="absolute left-0 top-0 whitespace-nowrap transition-opacity ease-in-out"
+            style={{ opacity: visible ? 1 : 0, transitionDuration: `${FADE_MS}ms` }}
+          >
+            {PLATFORMS[platform].name}
+          </span>
+        </span>
       </span>
       {/* White on a dark bar, the gradient logo on a light one, as in Figma. */}
       <img src={tone === 'dark' ? logoWhite : logoGradient} alt="Vouch" className="h-[11px] w-auto" />
@@ -100,15 +134,18 @@ export function TopStripSlide({ scope, tone = 'dark' }: { scope: string; tone?: 
   );
 }
 
-/** Sits with the footer's payment logos at the same 38 × 24 size; white, for the store's dark footer. */
-export function FooterBadge({ variant = 'white' }: { variant?: 'white' | 'gradient' }) {
-  return variant === 'gradient' ? (
-    <span className="grid h-6 w-[38px] place-items-center rounded-[3px] bg-[linear-gradient(135deg,#4a54e2,#2330d4)]" title="Post to Pay by Vouch">
-      <img src={logoWhite} alt="Vouch" className="h-[6.5px] w-auto" />
-    </span>
-  ) : (
-    <span className="grid h-6 w-[38px] place-items-center rounded-[3px] border border-[#d9d9d9] bg-white" title="Post to Pay by Vouch">
-      <img src={logoGradient} alt="Vouch" className="h-[6.5px] w-auto" />
+/**
+ * Sits with the footer's payment logos at the same 38 × 24 size. Figma's updated badge (Secondary
+ * callouts, "Badge / Gradient"): the Post to Pay gradient with the white wordmark alone, no icon, so
+ * the word is bigger and easier to read this small.
+ */
+export function FooterBadge() {
+  return (
+    <span
+      className="grid h-6 w-[38px] place-items-center overflow-hidden rounded-[3px] bg-[linear-gradient(147.7deg,#4a54e2,#2330d4)]"
+      title="Post to Pay by Vouch"
+    >
+      <img src={wordmarkWhite} alt="Vouch" width={30.5} height={8.637} className="block h-[8.637px] w-[30.5px]" />
     </span>
   );
 }
