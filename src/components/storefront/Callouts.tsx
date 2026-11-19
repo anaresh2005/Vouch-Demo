@@ -85,14 +85,47 @@ export function VouchLine({ priceCents, scope }: { priceCents: number; scope: st
   );
 }
 
-/** The top-strip slide: one slide in the store's announcement bar, in the bar's colors and font. */
-export function TopStripSlide({ scope, tone = 'dark' }: { scope: string; tone?: 'dark' | 'light' }) {
-  const { platform, visible } = useCyclingPlatform();
+// The top-strip slide shows for one announcement-bar turn, so instead of joining the shared clock
+// (which it would pick up mid-swap) it plays the same short sequence every time it appears: the
+// first platform, one crossfade halfway through its turn, then the second (Henry, November 18).
+const STRIP_PLATFORMS = PLATFORM_ORDER.slice(0, 2);
+const STRIP_LONGEST = STRIP_PLATFORMS.map((id) => PLATFORMS[id].name).sort((a, b) => b.length - a.length)[0];
+
+function useStripPlatform(durationMs: number) {
+  const [index, setIndex] = useState(0);
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // The name finishes fading back in at the middle of the slide's turn.
+    const out = setTimeout(() => setVisible(false), durationMs / 2 - FADE_MS);
+    const swap = setTimeout(() => {
+      setIndex(1);
+      setVisible(true);
+    }, durationMs / 2);
+    return () => { clearTimeout(out); clearTimeout(swap); };
+  }, [durationMs]);
+  return { platform: STRIP_PLATFORMS[index], visible };
+}
+
+/**
+ * The top-strip slide: one slide in the store's announcement bar, in the bar's colors and font. The
+ * name sits in a fixed slot as wide as the longer name, so the centered line doesn't move.
+ */
+export function TopStripSlide({ scope, tone = 'dark', durationMs }: { scope: string; tone?: 'dark' | 'light'; durationMs: number }) {
+  const { platform, visible } = useStripPlatform(durationMs);
   return (
     <button type="button" onClick={() => openVouchPopup(scope)} className="inline-flex items-center gap-1.5 hover:underline">
       <span>
         Up to 100% OFF if you post about your purchase on{' '}
-        <span className="font-medium transition-opacity" style={{ opacity: visible ? 1 : 0, transitionDuration: `${FADE_MS}ms` }}>{PLATFORMS[platform].name}</span>
+        <span className="relative inline-block text-left font-medium">
+          <span className="invisible" aria-hidden="true">{STRIP_LONGEST}</span>
+          <span
+            className="absolute left-0 top-0 whitespace-nowrap transition-opacity ease-in-out"
+            style={{ opacity: visible ? 1 : 0, transitionDuration: `${FADE_MS}ms` }}
+          >
+            {PLATFORMS[platform].name}
+          </span>
+        </span>
       </span>
       {/* White on a dark bar, the gradient logo on a light one, as in Figma. */}
       <img src={tone === 'dark' ? logoWhite : logoGradient} alt="Vouch" className="h-[11px] w-auto" />

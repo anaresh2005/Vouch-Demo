@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react';
 
-// One clock for every place that cycles through the platforms (the button's icon, the line under the
-// price, the top strip), so they always show the same platform and change at the same moment.
+// One clock for the button's icon and the line under the price, so they always show the same
+// platform and change at the same moment. (The top strip runs its own short sequence; see Callouts.)
 // Henry's timing, November 15: hold 2.5 s, swap 450 ms. The clock counts from a fixed point in time,
 // so the store in the phone frame stays in step too. Reduced motion holds the first platform.
 export const HOLD_MS = 2500;

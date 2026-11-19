@@ -31,8 +31,9 @@ Roadmap features mocked in the demo:
   the line under the cart total, the footer badge, the top-strip slide, the unlocked pill and the popup
   (for visitors from a social app; "Show the popup now" in the settings opens it). The thank-you page
   block is left out for now. Defaults: everything on except the popup
-  (`src/lib/demoSettings.ts`). The line under the price, the top strip and the button's icon change
-  platform together, on one clock. The footer shows the standard Shopify payment icons beside the badge.
+  (`src/lib/demoSettings.ts`). The line under the price and the button's icon change platform
+  together, on one clock; the top strip shows Instagram then TikTok each time it comes round, in a
+  fixed-width slot so the line doesn't move. The footer shows the standard Shopify payment icons beside the badge.
 - **Checkout hand-off.** Where the live product sends the shopper to Shopify checkout to enter their card
   (Check out, or Continue to payment at checkout, inside the panel), the demo ends: the button is shown but
   disabled, and a "Demo only" note explains the hand-off. The store's own checkout page has its card
