@@ -8,6 +8,7 @@ import logoGradient from '@/assets/vouch-logo-gradient.svg';
 import logoWhite from '@/assets/vouch-logo-white.svg';
 import { PlatformMark } from './platformMarks';
 import { PLATFORMS, PLATFORM_ORDER, PostToPay } from './PostToPay';
+import { SWAP_MS, usePlatformTick } from './platformCycle';
 import './post-to-pay.css';
 
 // Post to Pay's secondary callouts, from Figma ("Vouch Branding (Revamped)", Post to Pay page,
@@ -15,26 +16,27 @@ import './post-to-pay.css';
 // Callouts inside the merchant's content use the theme's font and colors plus the Vouch logo;
 // floating callouts and the popup use Vouch's styling. Each is switched on in the demo's settings.
 
-/** The platform name crossfades through the brand's platforms: hold 2.5 s, fade 450 ms. */
-const HOLD_MS = 2500;
-const FADE_MS = 450;
+/**
+ * The platform name follows the button's icon on the shared clock: it fades out as the icon starts
+ * to swap, changes at the swap's midpoint, and fades back in as the new icon lands.
+ */
+const FADE_MS = SWAP_MS / 2;
 
 function useCyclingPlatform() {
-  const [index, setIndex] = useState(0);
+  const tick = usePlatformTick();
+  const [shown, setShown] = useState(tick);
   const [visible, setVisible] = useState(true);
   useEffect(() => {
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    let fade: ReturnType<typeof setTimeout>;
-    const timer = setInterval(() => {
-      setVisible(false);
-      fade = setTimeout(() => {
-        setIndex((value) => (value + 1) % PLATFORM_ORDER.length);
-        setVisible(true);
-      }, FADE_MS);
-    }, HOLD_MS + FADE_MS * 2);
-    return () => { clearInterval(timer); clearTimeout(fade); };
-  }, []);
-  return { platform: PLATFORM_ORDER[index], visible };
+    if (tick === shown) return;
+    setVisible(false);
+    const fade = setTimeout(() => {
+      setShown(tick);
+      setVisible(true);
+    }, FADE_MS);
+    return () => clearTimeout(fade);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tick]);
+  return { platform: PLATFORM_ORDER[shown % PLATFORM_ORDER.length], visible };
 }
 
 const LONGEST_NAME = PLATFORM_ORDER.map((id) => PLATFORMS[id].name).sort((a, b) => b.length - a.length)[0];

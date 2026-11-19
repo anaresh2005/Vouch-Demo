@@ -6,6 +6,13 @@ import { demoStore, findProduct, money } from '@/lib/demoStore';
 import { useVouchSettings } from '@/lib/demoSettings';
 import { readState, useDemoState } from '@/lib/demoState';
 import { openVouchPopup, useCart } from '@/lib/storeState';
+import americanExpress from '@/assets/payment/american_express.svg';
+import applePay from '@/assets/payment/apple_pay.svg';
+import googlePay from '@/assets/payment/google_pay.svg';
+import mastercard from '@/assets/payment/master.svg';
+import paypal from '@/assets/payment/paypal.svg';
+import shopPay from '@/assets/payment/shopify_pay.svg';
+import visa from '@/assets/payment/visa.svg';
 import { FooterBadge, TopStripSlide, UnlockedPill, VouchPopup } from './Callouts';
 import { AboutPage, CartPage, CheckoutPage, CollectionPage, FaqPage, HomePage, ProductPage } from './StorePages';
 
@@ -128,7 +135,17 @@ function AnnouncementBar() {
   );
 }
 
-const PAYMENT_LOGOS = ['Visa', 'MC', 'Amex', 'Shop', 'Pay'];
+// The payment icons Shopify themes show in the footer (Shopify's open-source payment_icons set, 38 × 24),
+// in the order a store lists them; the Vouch badge sits at the end at the same size.
+const PAYMENT_LOGOS: [string, string][] = [
+  ['American Express', americanExpress],
+  ['Apple Pay', applePay],
+  ['Google Pay', googlePay],
+  ['Mastercard', mastercard],
+  ['PayPal', paypal],
+  ['Shop Pay', shopPay],
+  ['Visa', visa],
+];
 
 function Footer() {
   const path = useStorePath();
@@ -154,9 +171,9 @@ function Footer() {
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-4 px-4 py-5 md:px-8">
           <p className="text-xs text-[#bdbdbd]">© 2026, {demoStore.name} · A fictional store for the Vouch demo</p>
-          <ul className="flex items-center gap-2" aria-label="Payment methods">
-            {PAYMENT_LOGOS.map((name) => (
-              <li key={name} className="grid h-6 w-[38px] place-items-center rounded-[3px] bg-[#3a3a3a] text-[9px] font-semibold text-white/70">{name}</li>
+          <ul className="flex flex-wrap items-center gap-2" aria-label="Payment methods">
+            {PAYMENT_LOGOS.map(([name, src]) => (
+              <li key={name}><img src={src} alt={name} width={38} height={24} className="block h-6 w-[38px]" /></li>
             ))}
             {settings.footerBadge && <li><Link to={path('faq#post-to-pay')}><FooterBadge /></Link></li>}
           </ul>

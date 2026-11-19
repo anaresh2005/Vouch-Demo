@@ -7,6 +7,7 @@ import { useCart, useVouchAccount } from '@/lib/storeState';
 import terms from '@/content/post-to-pay-terms.txt?raw';
 import logo from '@/assets/vouch-logo-gradient.svg';
 import { PlatformMark } from './platformMarks';
+import { SWAP_MS, usePlatformTick } from './platformCycle';
 import './post-to-pay.css';
 
 // The Post to Pay button and panel as redesigned in Figma ("Vouch Branding (Revamped)", Post to Pay
@@ -482,28 +483,21 @@ function Avatar({ stats }: { stats: AccountStats | null }) {
 }
 
 // The launch button's icon: the accepted platforms take turns, each sliding in on a slight arc
-// (Henry's timing, November 15: hold 2.5 s, swap 450 ms, 3 px arc). It keeps cycling on hover.
-// Once a platform is chosen, only that one shows. Reduced motion shows the first icon, still.
-const HOLD_MS = 2500;
-const SWAP_MS = 450;
+// (Henry's timing, November 15: hold 2.5 s, swap 450 ms, 3 px arc), on the clock the callouts share
+// (platformCycle.ts). It keeps cycling on hover. Once a platform is chosen, only that one shows.
 const ARC_PX = 3;
 const TRAVEL_PX = 30;
 
 function CyclingMark({ platforms }: { platforms: SocialPlatform[] }) {
-  // Each tick moves to the next platform; tick 0 shows the first with nothing leaving.
-  const [tick, setTick] = useState(0);
+  const clock = usePlatformTick();
+  const count = platforms.length;
+  // Only a change of platform after the icon is on screen slides; the first render just shows it.
+  const first = useRef(clock);
+  const tick = count < 2 ? 0 : clock;
+  const index = tick % count;
+  const previous = count > 1 && tick !== first.current ? (tick - 1) % count : null;
   const incoming = useRef<HTMLSpanElement>(null);
   const outgoing = useRef<HTMLSpanElement>(null);
-  const count = platforms.length;
-  const index = tick % count;
-  const previous = tick > 0 ? (tick - 1) % count : null;
-
-  useEffect(() => {
-    setTick(0);
-    if (count < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const timer = setInterval(() => setTick((value) => value + 1), HOLD_MS + SWAP_MS);
-    return () => clearInterval(timer);
-  }, [count]);
 
   useEffect(() => {
     if (previous === null) return;
