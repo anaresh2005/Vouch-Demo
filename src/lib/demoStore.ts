@@ -1,5 +1,5 @@
-// Product images: 3D renders made in code with three.js for the demo (November 2026), one per color,
-// all in the same studio setup so they match. scripts/product-renders/ has the renderer.
+// Product images: AI-generated studio photos (November 2026), one per color, all in the same setup so
+// they match. scripts/product-photos/ has the prompts.
 const images = import.meta.glob<string>('../assets/products/*.jpg', { eager: true, import: 'default' });
 const image = (name: string) => images[`../assets/products/${name}.jpg`];
 
